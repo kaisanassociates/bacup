@@ -1,20 +1,42 @@
 {
   "functions": {
-    "app/api/**/*.ts": {
-      "maxDuration": 30
+    "app/api/register.js": {
+      "runtime": "nodejs18.x"
+    },
+    "app/api/registrations.js": {
+      "runtime": "nodejs18.x"
+    },
+    "app/api/attendees/[attendeeId].js": {
+      "runtime": "nodejs18.x"
+    },
+    "app/api/ticket/[ticketId].js": {
+      "runtime": "nodejs18.x"
     }
   },
   "env": {
-    "MONGODB_URI": "@mongodb_uri"
+    "MONGODB_URI": "@mongodb_uri",
+    "JWT_SECRET": "@jwt_secret",
+    "NODE_ENV": "production"
   },
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "installCommand": "npm install",
-  "framework": "vite",
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/app/api/$1"
+      "source": "/api/register",
+      "destination": "/app/api/register.js"
+    },
+    {
+      "source": "/api/registrations",
+      "destination": "/app/api/registrations.js"
+    },
+    {
+      "source": "/api/attendees/:attendeeId",
+      "destination": "/app/api/attendees/[attendeeId].js"
+    },
+    {
+      "source": "/api/ticket/:ticketId",
+      "destination": "/app/api/ticket/[ticketId].js"
     },
     {
       "source": "/(.*)",

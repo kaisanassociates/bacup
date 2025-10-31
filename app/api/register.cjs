@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const connectDB = require('../../src/lib/mongoose');
+const connectDB = require('./lib/mongoose.cjs');
 
 const registrationSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -156,7 +156,8 @@ module.exports = async function handler(req, res) {
     console.error('Registration error:', error);
     return res.status(500).json({
       success: false,
-      error: 'Internal server error'
+      error: error.message || 'Internal server error',
+      details: error.stack
     });
   }
-};
+}

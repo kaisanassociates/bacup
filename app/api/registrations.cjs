@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const connectDB = require('../../src/lib/mongoose');
+const connectDB = require('./lib/mongoose.cjs');
 
 const registrationSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -55,22 +55,19 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    await connectDB();
-    
-    // Check for admin authorization
+    // Check for admin token
     const authHeader = req.headers.authorization;
     if (!authHeader || authHeader !== 'Bearer admin123') {
       return res.status(401).json({
         success: false,
-        error: 'Unauthorized: Invalid admin credentials'
+        error: 'Unauthorized'
       });
     }
 
-    // Get all registrations
-    const registrations = await Registration.find({})
-      .sort({ registrationDate: -1 })
-      .select('-__v');
-
+    await connectDB();
+    
+    const registrations = await Registration.find({}).sort({ registrationDate: -1 });
+    
     return res.status(200).json({
       success: true,
       data: registrations
@@ -83,4 +80,4 @@ module.exports = async function handler(req, res) {
       error: 'Internal server error'
     });
   }
-};
+}

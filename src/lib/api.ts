@@ -2,7 +2,7 @@ import { RegistrationData, ApiResponse } from './api-utils';
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? window.location.origin 
-  : 'http://localhost:8081';
+  : 'http://localhost:3000';
 
 class ApiService {
   private baseUrl: string;

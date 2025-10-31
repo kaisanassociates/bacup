@@ -331,18 +331,20 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
                 {sectors.map((sector) => (
                   <div
                     key={sector}
-                    className={`flex items-center space-x-3 p-4 rounded-xl border-2 transition-all duration-300 cursor-pointer ${
+                    className={`flex items-center space-x-3 p-4 rounded-xl border-2 transition-all duration-300 ${
                       selectedSectors.includes(sector)
                         ? "bg-primary/10 border-primary shadow-lg"
                         : "bg-background border-border hover:border-primary/50 hover:shadow-md"
                     }`}
-                    onClick={() => handleSectorToggle(sector)}
                   >
                     <Checkbox
                       checked={selectedSectors.includes(sector)}
                       onCheckedChange={() => handleSectorToggle(sector)}
                     />
-                    <label className="text-sm font-medium cursor-pointer flex-1">
+                    <label 
+                      className="text-sm font-medium cursor-pointer flex-1"
+                      onClick={() => handleSectorToggle(sector)}
+                    >
                       {sector}
                     </label>
                   </div>
