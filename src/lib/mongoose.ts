@@ -1,10 +1,7 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env or .env.local');
-}
+const uri = process.env.MONGODB_URI;
+if (!uri) throw new Error("MONGODB_URI is not defined");
 
 interface MongooseCache {
   conn: typeof mongoose | null;
@@ -38,7 +35,7 @@ async function connectDB() {
 
     console.log('🔄 Connecting to MongoDB Atlas...');
     
-    cached!.promise = mongoose.connect(MONGODB_URI!, opts)
+    cached!.promise = mongoose.connect(uri, opts)
       .then((mongoose) => {
         console.log('✅ MongoDB connected successfully');
         console.log(`📊 Database: ${mongoose.connection.db.databaseName}`);
