@@ -1,7 +1,12 @@
 import mongoose from 'mongoose';
 
-const uri = process.env.MONGODB_URI;
-if (!uri) throw new Error("MONGODB_URI is not defined");
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  throw new Error(
+    'MONGODB_URI environment variable is not defined. Please add it in Vercel dashboard: Settings > Environment Variables'
+  );
+}
 
 interface MongooseCache {
   conn: typeof mongoose | null;
@@ -31,11 +36,12 @@ async function connectDB() {
       maxPoolSize: 10,
       serverSelectionTimeoutMS: 10000,
       socketTimeoutMS: 45000,
+      family: 4, // Use IPv4 for better serverless compatibility
     };
 
     console.log('🔄 Connecting to MongoDB Atlas...');
     
-    cached!.promise = mongoose.connect(uri, opts)
+    cached!.promise = mongoose.connect(MONGODB_URI!, opts)
       .then((mongoose) => {
         console.log('✅ MongoDB connected successfully');
         console.log(`📊 Database: ${mongoose.connection.db.databaseName}`);

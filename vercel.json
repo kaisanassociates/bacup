@@ -1,25 +1,23 @@
 {
   "functions": {
     "api/register.ts": {
-      "runtime": "nodejs18.x"
+      "runtime": "nodejs20.x"
     },
     "api/registrations.ts": {
-      "runtime": "nodejs18.x"
+      "runtime": "nodejs20.x"
     },
     "api/attendees/[attendeeId].ts": {
-      "runtime": "nodejs18.x"
+      "runtime": "nodejs20.x"
     },
     "api/ticket/[ticketId].ts": {
-      "runtime": "nodejs18.x"
+      "runtime": "nodejs20.x"
     }
   },
-  "env": {
-    "MONGODB_URI": "@mongodb_uri",
-    "NODE_ENV": "production"
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    }
   },
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "installCommand": "npm install",
   "rewrites": [
     {
       "source": "/api/register",

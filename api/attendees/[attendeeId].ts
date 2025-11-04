@@ -137,22 +137,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       message: 'Attendee updated successfully',
       data: registration
     });
-        message: 'Attendee deleted successfully'
-      });
-    } else {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid action'
-      });
-    }
-
-    await registration.save();
-
-    return res.status(200).json({
-      success: true,
-      message: 'Attendee updated successfully',
-      data: registration
-    });
 
   } catch (error) {
     console.error('Update attendee error:', error);
