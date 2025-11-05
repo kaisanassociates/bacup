@@ -173,14 +173,18 @@ const Ticket = () => {
     }
   };
 
+  const handleNeedHelp = () => {
+    const phoneNumber = "+91858999060";
+    const message = encodeURIComponent("Hello, I need assistance with my registration.");
+    const whatsappURL = `https://wa.me/${phoneNumber}?text=${message}`;
+    window.open(whatsappURL, "_blank");
+  };
+
   const handlePayNow = () => {
-    const url = (import.meta as any)?.env?.VITE_PAYMENT_URL || "";
-    if (url) {
-      window.open(url, "_blank", "noopener,noreferrer");
-    } else {
-      toast.info("Payment link will be shared shortly. For assistance, contact info@kaisanassociates.com");
-      window.location.href = "mailto:info@kaisanassociates.com?subject=Influ%C3%AAncia%20Payment%20Assistance&body=Hi%20Team%2C%20please%20help%20me%20complete%20my%20payment.%20My%20E-Pass%20ID%3A%20" + encodeURIComponent(attendee.qrCode);
-    }
+    const phoneNumber = "+91858999060";
+    const message = encodeURIComponent("Hello, I would like to complete my payment for the event.");
+    const whatsappURL = `https://wa.me/${phoneNumber}?text=${message}`;
+    window.open(whatsappURL, "_blank");
   };
 
   return (
@@ -247,8 +251,8 @@ const Ticket = () => {
                     <Button onClick={handlePayNow} className="h-10 md:h-11 px-5 md:px-6 font-semibold uppercase bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white rounded-full">
                       <DollarSign className="w-4 h-4 mr-2" /> Pay Now
                     </Button>
-                    <Button variant="outline" className="h-10 md:h-11 px-4 rounded-full uppercase text-xs md:text-sm" asChild>
-                      <a href="mailto:info@kaisanassociates.com?subject=Payment%20Help%20-%20Influ%C3%AAncia" target="_blank" rel="noreferrer">Need help?</a>
+                    <Button onClick={handleNeedHelp} variant="outline" className="h-10 md:h-11 px-4 rounded-full uppercase text-xs md:text-sm">
+                      Need Help
                     </Button>
                   </div>
                 </div>
