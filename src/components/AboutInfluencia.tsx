@@ -33,27 +33,27 @@ const AboutInfluencia = () => {
 
   const eventImages = [
     { 
-      src: "/src/assets/influencia-2024/NCA04318.JPG", 
+      src: "https://lh3.googleusercontent.com/pw/AP1GczMFf4DFNTJJuzlqYP_JiCEAXy7-qNrXmxp0wdQWxqsou8lLOQJJnvtV-TFJ6ocTgpZa7DP45Z6_xzIdi0yDtlQ4EvXgkiZwmy711FVKIj1r56wkUUM2J70Jtro-lpT1M4iAXh-gU7rZjce7owcYAkJ2cQ=w1421-h947-s-no?authuser=0", 
       caption: "Packed Auditorium",
       subtitle: "500+ Attendees • Edition 1.0"
     },
     { 
-      src: "/src/assets/influencia-2024/NCA04492.JPG", 
+      src: "https://lh3.googleusercontent.com/pw/AP1GczMyGrN3cyPvkdK2_YgCmdsqO0yYS3t4wFsg_mWzgK6NJan3EsC9RShM1Oqg5Jq8ssQmqcwUruVgxzev37FYX6ncVf7kRvbHO96x0RqpmokCTQPRbU5vQ3Q0aJknYRO-5gnDs96qUgev9ip9eH8A57tCLQ=w1421-h947-s-no?authuser=0", 
       caption: "Interactive Sessions",
       subtitle: "Hands-on Workshops"
     },
     { 
-      src: "/src/assets/influencia-2024/NCA04625.JPG", 
+      src: "https://lh3.googleusercontent.com/pw/AP1GczP9DJMnSePBjI0TEq9R7M9rknhNPuyRCAEpj9U6x_ne74k7sER5DXkxRKdDd0ZYqGSvVDROk6F5PEq9MaZMQWoqOqomrZB6HntasjSWO1a6HGoPxjhjAott1aZwy0JTTNevcSETQa9URa2ll8-5Ue6leA=w631-h947-s-no?authuser=0", 
       caption: "Audience Engagement",
       subtitle: "Active Participation"
     },
     { 
-      src: "/src/assets/influencia-2024/NCA04757.JPG", 
+      src: "https://lh3.googleusercontent.com/pw/AP1GczPTVc2GYRbIkfOMzUmMwOt2wy11Y6MZ9xMO-ccEF4-0KaYceSWet08khc0VYjjnF0y0_up_r_xY9CToDsAB7vrmj-ob9-wcpd9neQRBwDTuXpDA7PFgu3zrnZqOKs36AjrMGwt-ufaxmD0FYPuNHHijfA=w1421-h947-s-no?authuser=0", 
       caption: "Dr. Rashid in Action",
       subtitle: "Inspiring Leadership"
     },
     { 
-      src: "/src/assets/influencia-2024/NCA04950.JPG", 
+      src: "https://lh3.googleusercontent.com/pw/AP1GczM1Hnu1cA9pxxDPlDPrkyPPgPgpx5JWvowpq2K2lnFf9SVVn4uqCF3leQ8vW7tLwWwItLAupNSWtmYVTGByHw2WrYlP9EMC-D0zaOfoKbMtEgEdqJBcTQBME8AW9OwEoCPXKyooZ1YCwD5a8_xgMSRahA=w631-h947-s-no?authuser=0", 
       caption: "Transformative Moments",
       subtitle: "Life-Changing Insights"
     },
@@ -63,12 +63,12 @@ const AboutInfluencia = () => {
       subtitle: "Building Connections"
     },
     { 
-      src: "/src/assets/influencia-2024/NCA05362.JPG", 
+      src: "https://lh3.googleusercontent.com/pw/AP1GczNUEClbdPHbStGAmKFz8NGvjDNlVXYrYnTWQpolJsDztrWO4M-miD8up0newPflfWY6GlD9pQK4evwWU9e_9QNV5ee1onmN9cvEGhpixcHqfNZQdrb5z19gb5AqyNLi2OVaHm6nRzM90Z-rtQFC2qvlyQ=w631-h947-s-no?authuser=0", 
       caption: "Success Stories",
       subtitle: "Real Results Shared"
     },
     { 
-      src: "/src/assets/influencia-2024/NCA05478.JPG", 
+      src: "https://lh3.googleusercontent.com/pw/AP1GczPVJn1uV97siuoA3MvX6v4VNsQ7fvgGPX1K7xU7ygUMewklZ67UNwj2cEsSlj3kLJXQbmqeis879MgWz2V68EQEX7UIr-h4xXBBFTP7mSvewtCh9YupJH--HxGIFWa-MBvlDFgsuXqSka9E8tGZQtvrWA=w631-h947-s-no?authuser=0", 
       caption: "Breakthrough Experiences",
       subtitle: "Peak Performance"
     }
