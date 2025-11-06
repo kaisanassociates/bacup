@@ -196,12 +196,12 @@ const Ticket = () => {
         </Link>
 
         <div id="epass-container" className="glass-panel overflow-hidden animate-scale-in">
-          <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 border-b-2 border-primary/20 p-8 md:p-10">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 border-b-2 border-primary/20 p-6 md:p-10">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
               <div className="flex items-center gap-4">
                 <img src={kaisanLogo} alt="KAISAN ASSOCIATES" className="h-16 md:h-20 object-contain" />
                 <div className="border-l-2 border-primary/30 pl-4">
-                  <h1 className="text-3xl md:text-4xl font-bold gradient-text tracking-tight uppercase">INFLUENCIA</h1>
+                  <h1 className="text-3xl md:text-4xl font-bold gradient-text tracking-tight uppercase break-words">INFLUENCIA</h1>
                   <p className="text-sm md:text-base text-muted-foreground font-medium uppercase">EDITION 2.0 • 2025</p>
                 </div>
               </div>

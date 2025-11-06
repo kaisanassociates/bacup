@@ -12,6 +12,7 @@ import Ticket from "./pages/Ticket";
 import Admin from "./pages/Admin";
 import Staff from "./pages/Staff";
 import NotFound from "./pages/NotFound";
+import BulkPrintPage from "./pages/BulkPrint";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => {
                 <Route path="/ticket" element={<Ticket />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/staff" element={<Staff />} />
+                <Route path="/bulk-print" element={<BulkPrintPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

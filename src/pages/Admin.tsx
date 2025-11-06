@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Search, Trash2, CheckCircle, XCircle, DollarSign, Eye, Edit, FileDown } from "lucide-react";
+import { ArrowLeft, Search, Trash2, CheckCircle, XCircle, DollarSign, Eye, Edit, FileDown, Ticket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -11,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import kaisanLogo from "@/assets/kaisan-logo.png";
 import * as XLSX from "xlsx";
@@ -26,6 +27,42 @@ const Admin = () => {
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedAttendee, setEditedAttendee] = useState<any>(null);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  const handleViewEpass = (attendee: any) => {
+    localStorage.setItem("attendee", JSON.stringify(attendee));
+    window.open("/ticket", "_blank");
+  };
+
+  const handleBulkDownloadEpass = () => {
+    if (selectedIds.length === 0) {
+      toast.error("No attendees selected to download.");
+      return;
+    }
+    const attendeesToDownload = attendees.filter(a => selectedIds.includes(a._id));
+    if (attendeesToDownload.length === 0) {
+      toast.error("No selected attendees found.");
+      return;
+    }
+    sessionStorage.setItem("bulk_attendees", JSON.stringify(attendeesToDownload));
+    window.open("/bulk-print", "_blank");
+  };
+
+  const handleSelectAll = (checked: boolean | 'indeterminate') => {
+    if (checked === true) {
+      setSelectedIds(filteredAttendees.map(a => a._id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  const handleSelectOne = (id: string, checked: boolean) => {
+    if (checked) {
+      setSelectedIds(prev => [...prev, id]);
+    } else {
+      setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
+    }
+  };
 
   const handleLogin = async () => {
     if (!adminKey.trim()) {
@@ -407,6 +444,15 @@ const Admin = () => {
               <FileDown className="w-4 h-4 mr-2" />
               Export to Excel
             </Button>
+            <Button 
+              onClick={handleBulkDownloadEpass} 
+              variant="outline" 
+              className="h-12 md:h-10 rounded-full"
+              disabled={selectedIds.length === 0}
+            >
+              <Ticket className="w-4 h-4 mr-2" />
+              Download E-Passes ({selectedIds.length})
+            </Button>
           </div>
         </div>
 
@@ -415,6 +461,21 @@ const Admin = () => {
             <table className="w-full">
               <thead className="bg-muted/50 border-b border-border">
                 <tr>
+                  <th className="px-4 py-4 text-left">
+                    <Checkbox
+                      checked={
+                        selectedIds.length > 0 &&
+                        filteredAttendees.length > 0 &&
+                        selectedIds.length === filteredAttendees.length
+                          ? true
+                          : selectedIds.length > 0 && selectedIds.length < filteredAttendees.length
+                          ? 'indeterminate'
+                          : false
+                      }
+                      onCheckedChange={handleSelectAll}
+                      aria-label="Select all rows"
+                    />
+                  </th>
                   <th className="px-4 py-4 text-left text-sm font-semibold">Name</th>
                   <th className="px-4 py-4 text-left text-sm font-semibold hidden md:table-cell">Email</th>
                   <th className="px-4 py-4 text-left text-sm font-semibold hidden lg:table-cell">Phone</th>
@@ -425,7 +486,14 @@ const Admin = () => {
               </thead>
               <tbody className="divide-y divide-border">
                 {filteredAttendees.map((attendee) => (
-                  <tr key={attendee._id} className="hover:bg-muted/30 transition-colors">
+                  <tr key={attendee._id} className="hover:bg-muted/30 transition-colors" data-state={selectedIds.includes(attendee._id) ? 'selected' : ''}>
+                    <td className="px-4 py-4">
+                      <Checkbox
+                        checked={selectedIds.includes(attendee._id)}
+                        onCheckedChange={(checked) => handleSelectOne(attendee._id, !!checked)}
+                        aria-label={`Select row for ${attendee.name}`}
+                      />
+                    </td>
                     <td className="px-4 py-4">
                       <div>
                         <p className="font-medium">{attendee.name}</p>
@@ -499,6 +567,15 @@ const Admin = () => {
                           title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => handleViewEpass(attendee)}
+                          className="h-9 w-9 rounded-full"
+                          title="View E-Pass"
+                        >
+                          <Ticket className="w-4 h-4" />
                         </Button>
                       </div>
                     </td>

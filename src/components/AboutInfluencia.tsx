@@ -58,7 +58,7 @@ const AboutInfluencia = () => {
       subtitle: "Life-Changing Insights"
     },
     { 
-      src: "/src/assets/influencia-2024/NCA05233.JPG", 
+      src: "https://lh3.googleusercontent.com/pw/AP1GczPwLZjBM-vhWGJnNAA3z6eOmN0G5nx118EV56e8h9hloV3-8nbaiDXGDkv6piBdHxaUhpkWlyXQE8rYQkXawlUx-obUGPsvddesakuC1Tgh-_pwriBmCNTMY7ONXi3c0mJfuMAjRzMsHr6evKjTWoaIRw=w609-h914-s-no?authuser=0", 
       caption: "Networking Excellence",
       subtitle: "Building Connections"
     },
