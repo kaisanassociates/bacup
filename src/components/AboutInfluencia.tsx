@@ -252,7 +252,7 @@ const AboutInfluencia = () => {
           <div 
             className={`space-y-6 transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
           >
-            <h1 className="text-7xl md:text-9xl font-black tracking-tight">
+            <h1 className="text-6xl sm:text-7xl md:text-9xl font-black tracking-tight break-words">
               <span className="block bg-gradient-to-r from-red-600 via-rose-500 to-red-600 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
                 INFLUENCIA
               </span>

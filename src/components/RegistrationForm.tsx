@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { X, Check, Loader2, AlertCircle, ChevronLeft } from "lucide-react";
 import { toast } from "sonner";
 import { apiService } from "@/lib/api";
@@ -23,6 +24,9 @@ const formSchema = z.object({
     .max(255)
     .regex(/^[\w\.-]+@[\w\.-]+\.[a-zA-Z]{2,}$/, "Enter a valid email format")
     .trim(),
+  gender: z.enum(["Male", "Female", "Other"], {
+    required_error: "Please select your gender",
+  }),
   linkedinProfile: z.string()
     .max(500, "LinkedIn URL too long")
     .optional()
@@ -36,9 +40,9 @@ const formSchema = z.object({
     .trim(),
   achievements: z.string().max(1000, "Achievements too long (max 1000 characters)").optional(),
   futurePlan: z.string()
-    .min(50, "Please share a more detailed 5-year plan (min 50 characters)")
     .max(1000, "Future plan too long (max 1000 characters)")
-    .trim(),
+    .optional()
+    .or(z.literal("")),
   dateOfBirth: z.string()
     .min(1, "Date of birth is required")
     .refine((date) => {
@@ -52,18 +56,13 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 const sectors = [
-  "Education",
-  "Real Estate",
-  "Technology / IT",
-  "Healthcare",
-  "Trading",
-  "Retail / E-commerce",
-  "Manufacturing",
-  "Food & Hospitality",
-  "Finance / Investment",
-  "Consulting / Services",
-  "Media / Marketing",
-  "Others",
+  "Educator",
+  "Entrepreneur",
+  "Business",
+  "Start Up",
+  "Employed",
+  "Seeking Employment",
+  "Other",
 ];
 
 interface RegistrationFormProps {
@@ -103,6 +102,7 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
         fullName: data.fullName,
         email: data.email,
         contactNumber: data.contactNumber,
+        gender: data.gender,
         business: data.business,
         sectors: selectedSectors,
         designation: data.designation,
@@ -144,7 +144,7 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
 
   const nextStep = async () => {
     if (currentStep === 1) {
-      const isValid = await trigger(["fullName", "contactNumber", "email", "dateOfBirth"] as any);
+      const isValid = await trigger(["fullName", "contactNumber", "email", "gender", "dateOfBirth"] as any);
       if (isValid) {
         setCurrentStep(2);
       }
@@ -283,6 +283,32 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
                 )}
               </div>
             </div>
+
+            <div className="space-y-3">
+              <Label>Gender *</Label>
+              <RadioGroup
+                onValueChange={(value) => {
+                  register("gender").onChange({ target: { value, name: "gender" } });
+                }}
+                className="flex gap-6"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Male" id="male" />
+                  <Label htmlFor="male" className="cursor-pointer font-normal">Male</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Female" id="female" />
+                  <Label htmlFor="female" className="cursor-pointer font-normal">Female</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Other" id="other" />
+                  <Label htmlFor="other" className="cursor-pointer font-normal">Other</Label>
+                </div>
+              </RadioGroup>
+              {errors.gender && (
+                <p className="text-sm text-destructive">{errors.gender.message}</p>
+              )}
+            </div>
           </div>
           )}
   
@@ -361,7 +387,7 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
                   </div>
                 ))}
               </div>
-              {selectedSectors.includes("Others") && (
+              {selectedSectors.includes("Other") && (
                 <Input
                   {...register("otherSector")}
                   placeholder="Please specify your sector"
@@ -393,7 +419,7 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="futurePlan">Future Plan for Next 5 Years *</Label>
+                  <Label htmlFor="futurePlan">Future Plan for Next 5 Years</Label>
                   <Textarea
                     id="futurePlan"
                     {...register("futurePlan")}

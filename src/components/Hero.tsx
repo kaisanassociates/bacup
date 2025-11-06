@@ -22,25 +22,33 @@ const Hero = ({ onRegisterClick }: HeroProps) => {
           {/* Left Column - Content */}
           <div className="space-y-8">
             <div className="animate-fade-in-up opacity-0" style={{ animationDelay: "0.1s", animationFillMode: "forwards" }}>
-              <h3 className="text-sm font-semibold tracking-[0.3em] text-muted-foreground uppercase mb-4">
+              <h3 className="text-sm font-semibold tracking-[0.3em] text-primary uppercase mb-4">
                 Kaisan Associates Presents
               </h3>
             </div>
 
             <div className="animate-fade-in-up opacity-0" style={{ animationDelay: "0.3s", animationFillMode: "forwards" }}>
-              <h1 className="text-6xl md:text-8xl font-bold tracking-tight">
+              <h1 className="text-6xl md:text-8xl font-bold tracking-tight leading-none">
                 <span className="bg-gradient-to-r from-primary via-primary to-primary/80 bg-clip-text text-transparent">
                   INFLUENCIA
                 </span>
               </h1>
-              <p className="text-xl md:text-2xl font-light text-foreground/80 mt-4 tracking-wide">
+              <p className="text-2xl md:text-3xl font-semibold text-foreground/70 mt-3 tracking-wide">
                 Edition 2
               </p>
             </div>
 
             <div className="animate-fade-in-up opacity-0" style={{ animationDelay: "0.5s", animationFillMode: "forwards" }}>
-              <p className="text-2xl md:text-3xl font-light text-foreground/90 leading-relaxed">
-                Transform Your Life Through Personal Excellence
+              <p className="text-xl md:text-2xl font-light text-foreground/90 leading-relaxed max-w-3xl">
+                <span className="block md:inline">
+                  7&#8209;Hour Programming Workshop to <span className="font-medium text-foreground">Elevate Personal Life</span>,
+                </span>{" "}
+                <span className="block md:inline">
+                  <span className="font-medium text-foreground">Maintain Relationships</span>, and <span className="font-medium text-foreground">Achieve Professional Excellence</span>
+                </span>{" "}
+                <span className="block md:inline">
+                  for <span className="font-semibold text-primary">250 Change Makers</span>
+                </span>
               </p>
             </div>
 
@@ -65,6 +73,7 @@ const Hero = ({ onRegisterClick }: HeroProps) => {
               <Button
                 onClick={onRegisterClick}
                 size="lg"
+                aria-label="Reserve your seat for Influencia Edition 2"
                 className="px-12 py-7 text-lg font-semibold bg-primary hover:bg-primary/90 text-white rounded-full shadow-2xl hover:shadow-primary/50 transition-all duration-500 hover:scale-105 group"
               >
                 Reserve Your Seat

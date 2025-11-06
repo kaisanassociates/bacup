@@ -14,6 +14,7 @@ const registrationSchema = new mongoose.Schema({
   // Extended fields
   fullName: String,
   contactNumber: String,
+  gender: { type: String, enum: ['Male', 'Female', 'Other'] },
   business: String,
   sectors: [String],
   designation: String,
@@ -107,6 +108,7 @@ module.exports = async function handler(req, res) {
       // Extended fields
       fullName: body.fullName,
       contactNumber: body.contactNumber,
+      gender: body.gender,
       business: body.business,
       sectors: body.sectors || body.sector,
       designation: body.designation,

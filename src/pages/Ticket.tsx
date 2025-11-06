@@ -129,8 +129,8 @@ const Ticket = () => {
                   <div class="details">
                     <div class="card"><div class="label">Email</div><div class="value">${attendee.email}</div></div>
                     <div class="card"><div class="label">Phone</div><div class="value">${attendee.contactNumber}</div></div>
-                    <div class="card"><div class="label">Event Date</div><div class="value">MARCH 15, 2025</div></div>
-                    <div class="card"><div class="label">Venue</div><div class="value">KERALA, INDIA</div></div>
+                    <div class="card"><div class="label">Event Date</div><div class="value">13 DECEMBER 2025</div></div>
+                    <div class="card"><div class="label">Venue</div><div class="value">NILGIRI COLLEGE OF ARTS AND SCIENCE</div></div>
                   </div>
                 </div>
                 <div class="qrbox">
@@ -174,14 +174,14 @@ const Ticket = () => {
   };
 
   const handleNeedHelp = () => {
-    const phoneNumber = "+91858999060";
+    const phoneNumber = "+918589990060";
     const message = encodeURIComponent("Hello, I need assistance with my registration.");
     const whatsappURL = `https://wa.me/${phoneNumber}?text=${message}`;
     window.open(whatsappURL, "_blank");
   };
 
   const handlePayNow = () => {
-    const phoneNumber = "+91858999060";
+    const phoneNumber = "+918589990060";
     const message = encodeURIComponent("Hello, I would like to complete my payment for the event.");
     const whatsappURL = `https://wa.me/${phoneNumber}?text=${message}`;
     window.open(whatsappURL, "_blank");
@@ -247,13 +247,15 @@ const Ticket = () => {
                       </ul>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Button onClick={handlePayNow} className="h-10 md:h-11 px-5 md:px-6 font-semibold uppercase bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white rounded-full">
-                      <DollarSign className="w-4 h-4 mr-2" /> Pay Now
-                    </Button>
-                    <Button onClick={handleNeedHelp} variant="outline" className="h-10 md:h-11 px-4 rounded-full uppercase text-xs md:text-sm">
-                      Need Help
-                    </Button>
+                  <div className="flex-shrink-0 mt-4 md:mt-0">
+                    <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row items-center gap-3">
+                      <Button onClick={handlePayNow} className="w-full sm:w-auto md:w-full lg:w-auto h-11 px-6 font-semibold uppercase bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white rounded-full">
+                        <DollarSign className="w-4 h-4 mr-2" /> Pay Now
+                      </Button>
+                      <Button onClick={handleNeedHelp} variant="outline" className="w-full sm:w-auto md:w-full lg:w-auto h-11 px-4 rounded-full uppercase text-sm">
+                        Need Help
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -289,14 +291,14 @@ const Ticket = () => {
                     <Calendar className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                     <div className="min-w-0">
                       <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">EVENT DATE</p>
-                      <p className="text-sm font-medium uppercase">MARCH 15, 2025</p>
+                      <p className="text-sm font-medium uppercase">13 DECEMBER 2025</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3 p-4 rounded-lg bg-muted/30 border border-border/50">
                     <MapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                     <div className="min-w-0">
                       <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">VENUE</p>
-                      <p className="text-sm font-medium uppercase">KERALA, INDIA</p>
+                      <p className="text-sm font-medium uppercase">NILGIRI COLLEGE OF ARTS AND SCIENCE</p>
                     </div>
                   </div>
                 </div>
