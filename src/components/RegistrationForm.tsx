@@ -160,7 +160,10 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
     } else if (currentStep === 2) {
       const isValid = await trigger(["designation", "business", "experience"] as any);
       if (isValid && selectedSectors.length > 0) {
-        setCurrentStep(3);
+        // Use setTimeout to prevent any residual Enter key events from triggering the submit button
+        setTimeout(() => {
+          setCurrentStep(3);
+        }, 50);
       } else if (selectedSectors.length === 0) {
         toast.error("Please select at least one sector");
       }
@@ -209,6 +212,7 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
             <p className="text-sm text-white/90 mt-1">Edition 2 - Transform Your Life</p>
           </div>
           <Button
+            type="button"
             variant="ghost"
             size="icon"
             onClick={onClose}
@@ -222,9 +226,20 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
         <form 
           onSubmit={handleSubmit(onSubmit)} 
           onKeyDown={(e) => {
-            // Prevent form submission on Enter key press
-            if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
-              e.preventDefault();
+            // Prevent form submission on Enter key press for all inputs except textarea (where Enter adds newlines)
+            if (e.key === 'Enter') {
+              const target = e.target;
+              // Allow Enter in textareas for line breaks, but prevent it in all other form elements
+              if (target instanceof HTMLInputElement || 
+                  target instanceof HTMLSelectElement || 
+                  target instanceof HTMLButtonElement) {
+                e.preventDefault();
+              }
+              // For textareas, don't prevent default (allow multiline input)
+              // But also don't let it trigger form submission
+              if (target instanceof HTMLTextAreaElement) {
+                e.stopPropagation();
+              }
             }
           }}
           className="p-8 space-y-6"
@@ -467,6 +482,12 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
                 type="submit"
                 disabled={isSubmitting}
                 className="flex-1 bg-primary hover:bg-primary/90 text-white font-semibold py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                onKeyDown={(e) => {
+                  // Extra safeguard: prevent Enter key on the submit button itself
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                  }
+                }}
               >
                 {isSubmitting ? (
                   <>
