@@ -177,24 +177,6 @@ const PastEdition = ({ id = "past-edition", variant = "default", className = "" 
 					}
 				}
 
-				// 3) Try bundled asset URL via Vite ?url
-				let base64Url: string | null = null;
-				try {
-					const mod: any = await import("@/assets/base64_output.txt?url");
-					base64Url = mod?.default ?? null;
-				} catch {
-					base64Url = null;
-				}
-				if (base64Url) {
-					const resp = await fetch(base64Url);
-					const text = await resp.text();
-					const parsed = parseBase64Manifest(text);
-					if (!cancelled && parsed.length) {
-						setGallerySources(parsed);
-						return;
-					}
-				}
-
 				// No base64 found; keep empty and show message
 				if (!cancelled) setGallerySources([]);
 			} catch (e: any) {
