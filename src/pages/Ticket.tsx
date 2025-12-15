@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
-import { Download, ArrowLeft, Calendar, MapPin, Mail, Phone, User, Building, CheckCircle, Clock, DollarSign, ShieldCheck, Zap } from "lucide-react";
+import { Download, ArrowLeft, Calendar, MapPin, Mail, Phone, User, Building, CheckCircle, Clock, DollarSign, ShieldCheck, Zap, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Attendee } from "@/lib/api";
 import kaisanLogo from "@/assets/kaisan-logo.png";
+import tagTemplate from "@/assets/TAG_Template.jpg";
 import { toast } from "sonner";
 
 const Ticket = () => {
@@ -39,6 +40,7 @@ const Ticket = () => {
 
   const handleDownload = () => {
     const qrSvgEl = document.querySelector('#qr-svg') as SVGElement | null;
+    const templateImgEl = document.querySelector('#ticket-template-img') as HTMLImageElement | null;
     let qrDataUrl = '';
     if (qrSvgEl) {
       try {
@@ -48,6 +50,7 @@ const Ticket = () => {
         qrDataUrl = '';
       }
     }
+    const templateSrc = templateImgEl?.src || '';
 
     const html = `<!DOCTYPE html>
       <html>
@@ -78,101 +81,107 @@ const Ticket = () => {
               justify-content: center; 
             }
             .ticket { 
+              position: relative;
               width: 400px; 
               height: 600px; 
-              background: linear-gradient(180deg, #a00000 0%, #600000 100%); 
               border-radius: 20px; 
               overflow: hidden; 
-              display: flex; 
-              flex-direction: column; 
               box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            }
+            .ticket-bg {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              z-index: 0;
+            }
+            .ticket-content {
               position: relative;
+              z-index: 1;
+              width: 100%;
+              height: 100%;
             }
-            .top-section { 
-              flex: 1; 
-              padding: 40px 30px; 
-              display: flex; 
-              flex-direction: column; 
-              align-items: center; 
-              text-align: center; 
-              color: white; 
+            .name-section {
+              position: absolute;
+              top: 38%;
+              width: 100%;
+              text-align: center;
+              color: white;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+              display: flex;
+              flex-direction: column;
+              align-items: center;
             }
-            .logo { 
-              height: 40px; 
-              margin-bottom: 30px; 
-              filter: brightness(0) invert(1); 
+            .pending-pill {
+              margin-top: 8px;
+              display: inline-flex;
+              align-items: center;
+              gap: 6px;
+              padding: 6px 16px;
+              border-radius: 50px;
+              background: rgba(220, 38, 38, 0.3);
+              border: 1px solid rgba(254, 202, 202, 0.3);
+              backdrop-filter: blur(4px);
+              -webkit-backdrop-filter: blur(4px);
+              box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
             }
-            .presenter { 
-              font-size: 18px; 
-              font-weight: 500; 
-              margin-bottom: 10px; 
+            .pending-text {
+              color: #fee2e2;
+              font-size: 10px;
+              font-weight: 800;
+              text-transform: uppercase;
+              letter-spacing: 1px;
             }
-            .title { 
-              font-size: 56px; 
-              font-weight: 900; 
-              line-height: 1; 
-              margin-bottom: 10px; 
-              letter-spacing: -2px; 
-              font-family: 'Arial Black', sans-serif; 
-              text-transform: uppercase; 
+            .qr-section {
+              position: absolute;
+              bottom: 18%;
+              left: 50%;
+              transform: translateX(-50%);
+              background: white;
+              padding: 8px;
+              border-radius: 12px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             }
-            .edition { 
-              font-size: 24px; 
-              font-weight: 700; 
-              letter-spacing: 5px; 
-              margin-bottom: 30px; 
-              text-transform: uppercase; 
-            }
-            .description { 
-              font-size: 14px; 
-              line-height: 1.5; 
-              margin-bottom: 40px; 
-              opacity: 0.9; 
-              max-width: 280px; 
-            }
-            .date { 
-              font-size: 24px; 
-              font-weight: 600; 
-              margin-top: auto; 
-            }
-            .bottom-section { 
-              background: white; 
-              padding: 20px 30px; 
-              display: flex; 
-              justify-content: space-between; 
-              align-items: center; 
-              height: 120px; 
-            }
-            .designation { 
-              font-size: 36px; 
-              font-weight: 800; 
-              color: #900000; 
-              text-transform: uppercase; 
-            }
-            .qr-code { 
-              width: 80px; 
-              height: 80px; 
-            }
-            .qr-code img { 
-              width: 100%; 
-              height: 100%; 
+            .info-section {
+              position: absolute;
+              bottom: 5%;
+              width: 100%;
+              text-align: center;
+              color: rgba(255,255,255,0.8);
+              font-size: 10px;
+              font-family: monospace;
+              letter-spacing: 1px;
             }
           </style>
         </head>
         <body>
           <div class="ticket-container">
             <div class="ticket">
-              <div class="top-section">
-                <img src="${(document.querySelector('img[alt="KAISAN ASSOCIATES"]') as HTMLImageElement)?.src || ''}" class="logo" alt="KAISAN ASSOCIATES" />
-                <div class="presenter">Dr. Rashid Gazzali's</div>
-                <div class="title">INFLUENCIA</div>
-                <div class="edition">EDITION 2</div>
-                <div class="description">7-Hour Programming Workshop to Elevate Personal Life, Maintain Relationships and Professional Excellence for 250 Change Makers</div>
-                <div class="date">20 December 2025</div>
-              </div>
-              <div class="bottom-section">
-                <div class="designation">${attendee.designation || 'DELEGATE'}</div>
-                <div class="qr-code">${qrDataUrl ? '<img src="' + qrDataUrl + '" alt="QR Code" />' : ''}</div>
+              <img src="${templateSrc}" class="ticket-bg" />
+              <div class="ticket-content">
+                <div class="name-section">
+                  <h1 style="margin:0; font-size: 26px; text-transform: uppercase; font-weight: 800;">${attendee.fullName}</h1>
+                  <p style="margin:4px 0 0; font-size: 16px; opacity: 0.9; font-weight: 600;">${attendee.designation || 'DELEGATE'}</p>
+                  ${attendee.paymentStatus !== 'confirmed' ? `
+                    <div class="pending-pill">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fee2e2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                        <path d="M12 9v4"/>
+                        <path d="M12 17h.01"/>
+                      </svg>
+                      <span class="pending-text">Payment Pending</span>
+                    </div>
+                  ` : ''}
+                </div>
+                <div class="qr-section">
+                  ${qrDataUrl ? '<img src="' + qrDataUrl + '" style="width: 120px; height: 120px; display: block;" />' : ''}
+                </div>
+                <div class="info-section">
+                  <p style="margin: 2px 0;">ID: ${attendee.qrCode}</p>
+                  <p style="margin: 2px 0;">STATUS: ${attendee.paymentStatus.toUpperCase()}</p>
+                </div>
               </div>
             </div>
           </div>
@@ -350,19 +359,40 @@ const Ticket = () => {
               </div>
 
               <div className="flex flex-col items-center justify-center row-start-1 lg:row-auto">
-                <div className="relative w-full max-w-[280px] sm:max-w-[320px]">
-                  <div className="absolute inset-0 bg-primary/10 blur-2xl rounded-full"></div>
-                  <div className="relative bg-white p-4 sm:p-6 rounded-2xl shadow-2xl border-4 border-primary/20">
-                    <QRCodeSVG
-                      id="qr-svg"
-                      value={attendee.qrCode}
-                      width="100%"
-                      height="100%"
-                      level="H"
-                      includeMargin={true}
-                      fgColor="#000000"
-                      bgColor="#ffffff"
-                    />
+                <div className="relative w-full max-w-[350px] aspect-[2/3] rounded-3xl overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-transform duration-300">
+                  <img 
+                    id="ticket-template-img" 
+                    src={tagTemplate} 
+                    alt="Ticket Template" 
+                    className="absolute inset-0 w-full h-full object-cover" 
+                  />
+                  <div className="relative z-10 h-full flex flex-col items-center">
+                    <div className="mt-[38%] text-center w-full px-6 flex flex-col items-center">
+                      <h2 className="text-2xl sm:text-3xl font-black text-white uppercase drop-shadow-lg leading-tight">{attendee.fullName}</h2>
+                      <p className="text-sm sm:text-base text-white/90 font-bold uppercase tracking-wider mt-2 drop-shadow-md">{attendee.designation || 'DELEGATE'}</p>
+                      
+                      {attendee.paymentStatus !== 'confirmed' && (
+                        <div className="mt-3 flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-600/30 backdrop-blur-md border border-red-200/30 shadow-lg">
+                          <AlertTriangle className="w-3.5 h-3.5 text-red-50" strokeWidth={3} />
+                          <span className="text-[10px] sm:text-[11px] font-bold text-red-50 uppercase tracking-widest">Payment Pending</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-auto mb-[18%] bg-white p-2 rounded-xl shadow-xl">
+                      <QRCodeSVG
+                        id="qr-svg"
+                        value={attendee.qrCode}
+                        size={120}
+                        level="H"
+                        className="w-28 h-28 sm:w-32 sm:h-32"
+                      />
+                    </div>
+                    
+                    <div className="absolute bottom-4 w-full text-center text-white/70 text-[10px] font-mono uppercase tracking-widest">
+                      <p>ID: {attendee.qrCode}</p>
+                      <p className="mt-0.5">STATUS: {attendee.paymentStatus}</p>
+                    </div>
                   </div>
                 </div>
                 <div className="mt-6 text-center space-y-2">
@@ -370,9 +400,6 @@ const Ticket = () => {
                   <p className="text-xs text-muted-foreground max-w-xs uppercase">
                     PRESENT THIS QR CODE AT THE VENUE ENTRANCE FOR INSTANT VERIFICATION
                   </p>
-                  <div className="inline-block px-3 py-1 bg-muted rounded text-xs font-mono text-muted-foreground mt-2 uppercase">
-                    {attendee.qrCode}
-                  </div>
                 </div>
               </div>
             </div>
