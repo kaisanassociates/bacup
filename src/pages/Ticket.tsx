@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
-import { Download, ArrowLeft } from "lucide-react";
+import { Download, ArrowLeft, Calendar, MapPin, Mail, Phone, User, Building, CheckCircle, Clock, DollarSign, ShieldCheck, Zap, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Attendee } from "@/lib/api";
 import kaisanLogo from "@/assets/kaisan-logo.png";
+import tagTemplate from "@/assets/TAG_Template.jpg";
+import { toast } from "sonner";
 
 const Ticket = () => {
   const [attendee, setAttendee] = useState<Attendee | null>(null);
@@ -38,6 +40,7 @@ const Ticket = () => {
 
   const handleDownload = () => {
     const qrSvgEl = document.querySelector('#qr-svg') as SVGElement | null;
+    const templateImgEl = document.querySelector('#ticket-template-img') as HTMLImageElement | null;
     let qrDataUrl = '';
     if (qrSvgEl) {
       try {
@@ -47,127 +50,142 @@ const Ticket = () => {
         qrDataUrl = '';
       }
     }
+    const templateSrc = templateImgEl?.src || '';
 
     const html = `<!DOCTYPE html>
       <html>
         <head>
           <meta charset="utf-8" />
-          <title>E-PASS | INFLUENCIA</title>
+          <title>INFLUENCIA - EDITION 2</title>
           <style>
             @page { size: A4 portrait; margin: 0; }
             * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            body { margin: 0; padding: 0; font-family: 'Arial', sans-serif; background: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-            .ticket-container { width: 100%; max-width: 210mm; height: 297mm; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20mm; }
+            body { 
+              margin: 0; 
+              padding: 0; 
+              font-family: 'Arial', 'Helvetica', sans-serif; 
+              background: #fff; 
+              display: flex; 
+              justify-content: center; 
+              align-items: center; 
+              min-height: 100vh;
+            }
+            .ticket-container { 
+              width: 100%; 
+              max-width: 210mm; 
+              height: 297mm; 
+              background: #fff; 
+              display: flex; 
+              flex-direction: column; 
+              align-items: center; 
+              justify-content: center; 
+            }
             .ticket { 
+              position: relative;
               width: 400px; 
               height: 600px; 
-              background: linear-gradient(180deg, #a00000 0%, #600000 100%); 
               border-radius: 20px; 
               overflow: hidden; 
-              display: flex; 
-              flex-direction: column; 
               box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             }
-            .top-section { 
-              flex: 1; 
-              padding: 30px 25px; 
-              display: flex; 
-              flex-direction: column; 
-              align-items: center; 
-              text-align: center; 
-              color: white;
-              justify-content: flex-start;
+            .ticket-bg {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              z-index: 0;
             }
-            .logo { 
-              height: 35px; 
-              margin-bottom: 20px; 
-              filter: brightness(0) invert(1); 
+            .ticket-content {
+              position: relative;
+              z-index: 1;
+              width: 100%;
+              height: 100%;
             }
-            .presenter { 
-              font-size: 16px; 
-              font-weight: 500; 
-              margin-bottom: 8px; 
+            .name-section {
+              position: absolute;
+              top: 62%;
+              width: 100%;
+              text-align: center;
+              padding: 0 20px;
             }
-            .title { 
-              font-size: 52px; 
-              font-weight: 900; 
-              line-height: 0.9; 
-              margin-bottom: 8px; 
-              letter-spacing: -1px; 
-              font-family: 'Arial Black', sans-serif; 
-              text-transform: uppercase; 
+            .name-text {
+              margin: 0;
+              font-size: 32px;
+              text-transform: uppercase;
+              font-weight: 900;
+              color: #000;
+              line-height: 1.1;
+              text-shadow: none;
             }
-            .edition { 
-              font-size: 20px; 
-              font-weight: 700; 
-              letter-spacing: 4px; 
-              margin-bottom: 20px; 
-              text-transform: uppercase; 
-            }
-            .description { 
-              font-size: 12px; 
-              line-height: 1.4; 
-              margin-bottom: 20px; 
-              opacity: 0.95; 
-              max-width: 280px; 
-            }
-            .date { 
-              font-size: 18px; 
-              font-weight: 600; 
-              margin-bottom: 15px;
-            }
-            .name { 
-              font-size: 28px; 
-              font-weight: 800; 
-              color: #000; 
+            .designation-text {
+              position: absolute;
+              bottom: 12%;
+              left: 30px;
+              font-size: 36px;
+              font-weight: 900;
+              color: #900000;
               text-transform: uppercase;
               margin: 0;
+              text-shadow: none;
             }
-            .bottom-section { 
-              background: white; 
-              padding: 18px 25px; 
-              display: flex; 
-              justify-content: space-between; 
-              align-items: center; 
-              height: 110px; 
-            }
-            .designation { 
-              font-size: 32px; 
-              font-weight: 900; 
-              color: #900000; 
-              text-transform: uppercase; 
-              letter-spacing: -0.5px;
-            }
-            .qr-code { 
-              width: 70px; 
-              height: 70px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
+            .qr-section {
+              position: absolute;
+              bottom: 10%;
+              right: 30px;
               background: white;
-              border: 2px solid #ddd;
+              padding: 4px;
+              border-radius: 8px;
             }
-            .qr-code img { 
-              width: 100%; 
-              height: 100%; 
+            .payment-status {
+              position: absolute;
+              top: 70%;
+              width: 100%;
+              text-align: center;
+            }
+            .pending-pill {
+              display: inline-flex;
+              align-items: center;
+              gap: 6px;
+              padding: 6px 16px;
+              border-radius: 50px;
+              background: rgba(220, 38, 38, 0.15);
+              border: 2px solid rgba(185, 28, 28, 0.4);
+            }
+            .pending-text {
+              color: #7f1d1d;
+              font-size: 11px;
+              font-weight: 900;
+              text-transform: uppercase;
+              letter-spacing: 1px;
             }
           </style>
         </head>
         <body>
           <div class="ticket-container">
             <div class="ticket">
-              <div class="top-section">
-                <img src="${(document.querySelector('img[alt="KAISAN ASSOCIATES"]') as HTMLImageElement)?.src || ''}" class="logo" alt="KAISAN" />
-                <div class="presenter">Dr. Rashid Gazzali's</div>
-                <div class="title">INFLUENCIA</div>
-                <div class="edition">EDITION 2</div>
-                <div class="description">7-Hour Programming Workshop to Elevate Personal Life, Maintain Relationships and Professional Excellence for 250 Change Makers</div>
-                <div class="date">20 December 2025</div>
-                <div class="name">${attendee.fullName}</div>
-              </div>
-              <div class="bottom-section">
-                <div class="designation">${attendee.designation || 'DELEGATE'}</div>
-                <div class="qr-code">${qrDataUrl ? '<img src="' + qrDataUrl + '" alt="QR" />' : '<div style="width:70px;height:70px;"></div>'}</div>
+              <img src="${templateSrc}" class="ticket-bg" alt="Ticket Template" />
+              <div class="ticket-content">
+                <div class="name-section">
+                  <h1 class="name-text">${attendee.fullName}</h1>
+                </div>
+                ${attendee.paymentStatus !== 'confirmed' ? `
+                  <div class="payment-status">
+                    <div class="pending-pill">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7f1d1d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                        <path d="M12 9v4"/>
+                        <path d="M12 17h.01"/>
+                      </svg>
+                      <span class="pending-text">Payment Pending</span>
+                    </div>
+                  </div>
+                ` : ''}
+                <h2 class="designation-text">${attendee.designation || 'DELEGATE'}</h2>
+                <div class="qr-section">
+                  ${qrDataUrl ? '<img src="' + qrDataUrl + '" style="width: 90px; height: 90px; display: block;" alt="QR Code" />' : ''}
+                </div>
               </div>
             </div>
           </div>
@@ -194,47 +212,231 @@ const Ticket = () => {
     window.open(whatsappURL, "_blank");
   };
 
+  const handlePayNow = () => {
+    const phoneNumber = "+918589990060";
+    const message = encodeURIComponent("Hello, I would like to complete my payment for the event.");
+    const whatsappURL = `https://wa.me/${phoneNumber}?text=${message}`;
+    window.open(whatsappURL, "_blank");
+  };
+
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-4 relative">
-      <Link to="/" className="absolute top-8 left-8 text-white/50 hover:text-white flex items-center gap-2 transition-colors">
-        <ArrowLeft className="w-4 h-4" /> Back
-      </Link>
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 py-6 sm:py-8 md:py-12 px-4">
+      <div className="container mx-auto max-w-4xl">
+        <Link to="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary mb-6 transition-colors print:hidden">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          BACK TO HOME
+        </Link>
 
-      <div className="w-full max-w-[400px] bg-gradient-to-b from-[#a00000] to-[#600000] rounded-3xl overflow-hidden shadow-2xl flex flex-col">
-        <div className="flex-1 p-6 flex flex-col items-center text-center text-white">
-          <img src={kaisanLogo} alt="KAISAN ASSOCIATES" className="h-9 mb-5 brightness-0 invert" />
-          
-          <p className="text-sm font-medium mb-1 opacity-95">Dr. Rashid Gazzali's</p>
-          <h1 className="text-5xl font-black tracking-tight mb-1 uppercase leading-none">INFLUENCIA</h1>
-          <h2 className="text-lg font-bold tracking-[0.15em] mb-5 uppercase">EDITION 2</h2>
-          
-          <p className="text-xs leading-tight opacity-90 max-w-xs mx-auto font-medium mb-5">
-            7-Hour Programming Workshop to Elevate Personal Life, Maintain Relationships and Professional Excellence for 250 Change Makers
-          </p>
-          
-          <p className="text-base font-semibold mb-3">20 December 2025</p>
-          <p className="text-2xl font-black text-black uppercase tracking-tight">{attendee.fullName}</p>
-        </div>
+        <div id="epass-container" className="glass-panel overflow-hidden animate-scale-in">
+          <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 border-b-2 border-primary/20 p-4 sm:p-6">
+            <div className="flex flex-col gap-4">
+              {/* Logo and Title Section */}
+              <div className="flex items-center gap-3 sm:gap-4">
+                <img src={kaisanLogo} alt="KAISAN ASSOCIATES" className="h-12 sm:h-16 md:h-20 object-contain flex-shrink-0" />
+                <div className="border-l-2 border-primary/30 pl-3 sm:pl-4 min-w-0">
+                  <h1 className="text-xl sm:text-3xl md:text-4xl font-bold gradient-text tracking-tight uppercase break-words leading-tight">INFLUENCIA</h1>
+                  <p className="text-[10px] sm:text-sm md:text-base text-muted-foreground font-medium uppercase mt-0.5">EDITION 2.0 • 2025</p>
+                </div>
+              </div>
+              
+              {/* Status Section */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
+                <div className={`inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold uppercase self-start ${
+                  attendee.attended 
+                    ? 'bg-green-500/20 text-green-700 border border-green-500/30' 
+                    : attendee.paymentStatus === 'confirmed'
+                    ? 'bg-blue-500/20 text-blue-700 border border-blue-500/30'
+                    : 'bg-yellow-500/20 text-yellow-700 border border-yellow-500/30'
+                }`}>
+                  {attendee.attended ? (
+                    <><CheckCircle className="w-4 h-4" /> CHECKED IN</>
+                  ) : attendee.paymentStatus === 'confirmed' ? (
+                    <><CheckCircle className="w-4 h-4" /> CONFIRMED</>
+                  ) : (
+                    <><Clock className="w-4 h-4" /> PENDING</>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground uppercase">E-PASS #{attendee.qrCode.slice(-8).toUpperCase()}</p>
+              </div>
+            </div>
+          </div>
 
-        <div className="bg-white h-28 px-6 flex items-center justify-between shrink-0">
-          <h3 className="text-3xl font-black text-[#900000] uppercase tracking-tighter">
-            {attendee.designation || 'DELEGATE'}
-          </h3>
-          <div className="w-16 h-16 bg-white border-2 border-gray-300 flex items-center justify-center rounded">
-            <QRCodeSVG 
-              id="qr-svg"
-              value={attendee.qrCode} 
-              size={60}
-              level="H"
-            />
+          <div className="p-4 sm:p-6 md:p-8 lg:p-10">
+            {/* Payment encouragement card (shows only when payment is pending) */}
+            {attendee.paymentStatus !== 'confirmed' && (
+              <div className="mb-6 md:mb-8 rounded-xl border border-yellow-300/60 bg-yellow-50 p-4 sm:p-5 shadow-sm">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5 rounded-full bg-yellow-200 p-2 text-yellow-700">
+                      <DollarSign className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold uppercase text-yellow-800">Payment Pending — Complete to Confirm Your Seat</h3>
+                      <p className="text-xs text-yellow-700/90 mt-1">
+                        Finish your payment now to unlock fast entry, priority seating, and bonus resources.
+                      </p>
+                      <ul className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-2 text-[11px] text-yellow-800/90">
+                        <li className="inline-flex items-center gap-2"><ShieldCheck className="w-3.5 h-3.5" /> Guaranteed seat</li>
+                        <li className="inline-flex items-center gap-2"><Zap className="w-3.5 h-3.5" /> Fast-track entry</li>
+                        <li className="inline-flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5" /> Bonus resources</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="flex-shrink-0 mt-4 md:mt-0">
+                    <div className="flex flex-col sm:flex-row items-center gap-3">
+                      <Button onClick={() => window.location.href = 'upi://pay?ver=01&mode=01&pa=c0j9uodoggyh@idbi&pn=KAISAN%20ASSOCIATES%20LLP&mc=5816&qrMedium=06&am=3999&cu=INR'} className="w-full sm:w-auto h-11 px-6 font-semibold uppercase bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white rounded-full text-sm">
+                        <DollarSign className="w-4 h-4 mr-2" /> Pay Now
+                      </Button>
+                      <Button onClick={handleNeedHelp} variant="outline" className="w-full sm:w-auto h-11 px-4 rounded-full uppercase text-sm">
+                        Need Help
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            <div className="grid lg:grid-cols-[1.6fr,1fr] gap-8 md:gap-10">
+              <div className="space-y-6 md:space-y-8">
+                <div className="space-y-2">
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">ATTENDEE INFORMATION</p>
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground leading-tight uppercase">{attendee.fullName}</h2>
+                  <div className="flex items-center gap-2 text-base md:text-lg text-primary font-medium uppercase">
+                    <Building className="w-5 h-5" />
+                    <span>{attendee.designation || 'ATTENDEE'}</span>
+                  </div>
+                  <p className="text-sm md:text-base text-muted-foreground uppercase">{attendee.business}</p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex items-start gap-3 p-3 sm:p-4 rounded-lg bg-muted/30 border border-border/50">
+                    <Mail className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">EMAIL</p>
+                      <p className="text-sm font-medium break-all uppercase">{attendee.email}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 sm:p-4 rounded-lg bg-muted/30 border border-border/50">
+                    <Phone className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">PHONE</p>
+                      <p className="text-sm font-medium uppercase">{attendee.contactNumber}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 sm:p-4 rounded-lg bg-muted/30 border border-border/50">
+                    <Calendar className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">EVENT DATE</p>
+                      <p className="text-sm font-medium uppercase">20 DECEMBER 2025</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 sm:p-4 rounded-lg bg-muted/30 border border-border/50">
+                    <MapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">VENUE</p>
+                      <p className="text-sm font-medium uppercase">NILGIRI COLLEGE OF ARTS AND SCIENCE</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-l-4 border-primary pl-4 py-2 space-y-2">
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="text-xs sm:text-sm text-muted-foreground uppercase">REGISTERED</span>
+                    <span className="text-xs sm:text-sm font-semibold uppercase text-right">{new Date(attendee.registrationDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase()}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="text-xs sm:text-sm text-muted-foreground uppercase">PAYMENT</span>
+                    <span className={`text-xs sm:text-sm font-semibold uppercase ${
+                      attendee.paymentStatus === 'confirmed' ? 'text-green-600' : 'text-yellow-600'
+                    }`}>
+                      {attendee.paymentStatus === 'confirmed' ? '✓ CONFIRMED' : '⏳ PENDING'}
+                    </span>
+                  </div>
+                  {attendee.attended && attendee.checkInTime && (
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="text-xs sm:text-sm text-muted-foreground uppercase">CHECKED IN</span>
+                      <span className="text-xs sm:text-sm font-semibold text-green-600 uppercase text-right">
+                        {new Date(attendee.checkInTime).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).toUpperCase()}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex flex-col items-center justify-center row-start-1 lg:row-auto">
+                <div className="relative w-full max-w-[350px] aspect-[2/3] rounded-3xl overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-transform duration-300">
+                  <img 
+                    id="ticket-template-img" 
+                    src={tagTemplate} 
+                    alt="Ticket Template" 
+                    className="absolute inset-0 w-full h-full object-cover" 
+                  />
+                  <div className="relative z-10 h-full flex flex-col items-center">
+                    <div className="mt-[38%] text-center w-full px-6 flex flex-col items-center">
+                      <h2 className="text-2xl sm:text-3xl font-black text-white uppercase drop-shadow-lg leading-tight">{attendee.fullName}</h2>
+                      <p className="text-sm sm:text-base text-white/90 font-bold uppercase tracking-wider mt-2 drop-shadow-md">{attendee.designation || 'DELEGATE'}</p>
+                      
+                      {attendee.paymentStatus !== 'confirmed' && (
+                        <div className="mt-3 flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-600/30 backdrop-blur-md border border-red-200/30 shadow-lg">
+                          <AlertTriangle className="w-3.5 h-3.5 text-red-50" strokeWidth={3} />
+                          <span className="text-[10px] sm:text-[11px] font-bold text-red-50 uppercase tracking-widest">Payment Pending</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-auto mb-[18%] bg-white p-2 rounded-xl shadow-xl">
+                      <QRCodeSVG
+                        id="qr-svg"
+                        value={attendee.qrCode}
+                        size={120}
+                        level="H"
+                        className="w-28 h-28 sm:w-32 sm:h-32"
+                      />
+                    </div>
+                    
+                    <div className="absolute bottom-4 w-full text-center text-white/70 text-[10px] font-mono uppercase tracking-widest">
+                      <p>ID: {attendee.qrCode}</p>
+                      <p className="mt-0.5">STATUS: {attendee.paymentStatus}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-6 text-center space-y-2">
+                  <p className="text-sm font-semibold text-foreground uppercase">SCAN FOR ENTRY</p>
+                  <p className="text-xs text-muted-foreground max-w-xs uppercase">
+                    PRESENT THIS QR CODE AT THE VENUE ENTRANCE FOR INSTANT VERIFICATION
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 md:mt-10 pt-8 border-t border-border">
+              <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 sm:p-6">
+                <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2 uppercase">
+                  <User className="w-4 h-4" />
+                  IMPORTANT INSTRUCTIONS
+                </h3>
+                <ul className="text-xs text-muted-foreground space-y-2 list-disc list-inside uppercase">
+                  <li>THIS E-PASS IS VALID FOR ONE PERSON ONLY AND NON-TRANSFERABLE</li>
+                  <li>PLEASE CARRY A VALID PHOTO ID ALONG WITH THIS E-PASS</li>
+                  <li>ENTRY WILL BE ALLOWED ONLY AFTER QR CODE VERIFICATION</li>
+                  <li>PLEASE ARRIVE 30 MINUTES BEFORE THE EVENT STARTS</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-muted/30 border-t border-border px-4 sm:px-8 py-4 sm:py-6 text-center">
+            <p className="text-xs text-muted-foreground uppercase">
+              © 2025 KAISAN ASSOCIATES. ALL RIGHTS RESERVED. | FOR SUPPORT: INFO@KAISANASSOCIATES.COM
+            </p>
+          </div>
+
+          <div className="p-4 sm:p-6 text-center print:hidden border-t border-border">
+            <Button onClick={handleDownload} size="lg" className="w-full sm:w-auto h-auto px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base uppercase">
+              <Download className="w-5 h-5 mr-2" />
+              DOWNLOAD / PRINT E-PASS
+            </Button>
           </div>
         </div>
-      </div>
-
-      <div className="mt-8">
-        <Button onClick={handleDownload} className="bg-white text-black hover:bg-white/90">
-          <Download className="w-4 h-4 mr-2" /> Download Ticket
-        </Button>
       </div>
     </div>
   );
