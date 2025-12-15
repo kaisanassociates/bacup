@@ -94,7 +94,7 @@ const Ticket = () => {
                 <div class="bottom-section">
                     <div class="designation">\${attendee.designation || 'DELEGATE'}</div>
                     <div class="qr-code">
-                        \${qrDataUrl ? \`<img src="\${qrDataUrl}" />\` : ''}
+                      \${qrDataUrl ? '<img src="' + qrDataUrl + '" />' : ''}
                     </div>
                 </div>
             </div>
