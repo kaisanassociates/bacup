@@ -5,6 +5,7 @@ import { ArrowLeft, Calendar, MapPin, Mail, Phone, User, Building, CheckCircle, 
 import { Button } from "@/components/ui/button";
 import { Attendee } from "@/lib/api";
 import kaisanLogo from "@/assets/kaisan-logo.png";
+import tagTemplate from "@/assets/TAG_Template.jpg";
 import DownloadTicket from "@/components/DownloadTicket";
 import { toast } from "sonner";
 
