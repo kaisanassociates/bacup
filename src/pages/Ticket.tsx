@@ -40,7 +40,6 @@ const Ticket = () => {
 
   const handleDownload = () => {
     const qrSvgEl = document.querySelector('#qr-svg') as SVGElement | null;
-    const templateImgEl = document.querySelector('#ticket-template-img') as HTMLImageElement | null;
     let qrDataUrl = '';
     if (qrSvgEl) {
       try {
@@ -50,7 +49,7 @@ const Ticket = () => {
         qrDataUrl = '';
       }
     }
-    const templateSrc = templateImgEl?.src || '';
+    const templateSrc = tagTemplate;
 
     const html = `<!DOCTYPE html>
       <html>
@@ -60,6 +59,7 @@ const Ticket = () => {
           <style>
             @page { size: A4 portrait; margin: 0; }
             * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            html, body { height: 100%; }
             body { 
               margin: 0; 
               padding: 0; 
@@ -82,9 +82,10 @@ const Ticket = () => {
             }
             .ticket { 
               position: relative;
-              width: 400px; 
+              /* Match TAG_Template.jpg aspect ratio (~3:4) to avoid cropping/overlap */
+              width: 450px; 
               height: 600px; 
-              border-radius: 20px; 
+              border-radius: 24px; 
               overflow: hidden; 
               box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             }
@@ -103,58 +104,92 @@ const Ticket = () => {
               width: 100%;
               height: 100%;
             }
-            .name-section {
+            .payment-pill {
               position: absolute;
-              top: 58%;
-              width: 100%;
-              text-align: center;
-              color: white;
-              text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-            }
-            .pending-pill {
-              position: absolute;
-              top: 20px;
+              top: 16px;
               left: 50%;
               transform: translateX(-50%);
               display: inline-flex;
               align-items: center;
-              gap: 6px;
-              padding: 6px 16px;
-              border-radius: 50px;
-              background: rgba(220, 38, 38, 0.3);
-              border: 1px solid rgba(254, 202, 202, 0.3);
-              backdrop-filter: blur(4px);
-              -webkit-backdrop-filter: blur(4px);
-              box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+              gap: 8px;
+              padding: 10px 20px;
+              border-radius: 999px;
+              background: #ffffff;
+              border: none;
+              box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+              z-index: 10;
             }
-            .pending-text {
-              color: #fee2e2;
-              font-size: 10px;
-              font-weight: 800;
+            .payment-icon {
+              width: 16px;
+              height: 16px;
+              color: #c41e3a;
+              font-weight: bold;
+            }
+            .payment-text {
+              color: #c41e3a;
+              font-size: 11px;
+              font-weight: 900;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+            }
+            .name {
+              position: absolute;
+              left: 30px;
+              right: 110px;
+              /* Below the "20 December 2025" on the template - in white section */
+              top: 62%;
+              text-align: left;
+              color: #000000;
+              font-weight: 900;
+              text-transform: uppercase;
+              letter-spacing: .5px;
+              font-size: 32px;
+              line-height: 1.1;
+              text-shadow: none;
+            }
+            .attendee-id {
+              position: absolute;
+              left: 30px;
+              right: 110px;
+              top: 72%;
+              text-align: left;
+              color: #000000;
+              font-size: 14px;
+              font-weight: 700;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+              text-shadow: none;
+            }
+            .delegate-label {
+              position: absolute;
+              left: 30px;
+              bottom: 30px;
+              color: #c41e3a;
+              font-size: 40px;
+              font-weight: 900;
               text-transform: uppercase;
               letter-spacing: 1px;
+              text-shadow: none;
             }
-            .qr-section {
+            .qr-box {
               position: absolute;
-              bottom: 12%;
-              right: 8%;
-              background: white;
-              padding: 8px;
-              border-radius: 12px;
-              box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+              /* Inside the right-side QR box near "DELEGATE" */
+              right: 22px;
+              bottom: 22px;
+              width: 115px;
+              height: 115px;
+              background: #ffffff;
+              border: 2px solid #333;
+              border-radius: 4px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: 6px;
             }
-            .info-section {
-              position: absolute;
-              bottom: 5%;
+            .qr-box img {
               width: 100%;
-              text-align: center;
-              color: rgba(255,255,255,0.8);
-              font-size: 10px;
-              font-family: monospace;
-              letter-spacing: 1px;
+              height: 100%;
+              display: block;
             }
           </style>
         </head>
@@ -163,26 +198,17 @@ const Ticket = () => {
             <div class="ticket">
               <img src="${templateSrc}" class="ticket-bg" />
               <div class="ticket-content">
-                ${attendee.paymentStatus !== 'confirmed' ? `
-                    <div class="pending-pill">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fee2e2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
-                        <path d="M12 9v4"/>
-                        <path d="M12 17h.01"/>
-                      </svg>
-                      <span class="pending-text">Payment Pending</span>
-                    </div>
-                  ` : ''}
-                <div class="name-section">
-                  <h1 style="margin:0; font-size: 26px; text-transform: uppercase; font-weight: 800;">${attendee.fullName}</h1>
-                  <p style="margin:4px 0 0; font-size: 14px; opacity: 0.9; font-weight: 600;">ID: ${attendee.qrCode}</p>
-                  <p style="margin:2px 0 0; font-size: 16px; opacity: 0.9; font-weight: 600;">${attendee.designation || 'DELEGATE'}</p>
+                <div class="payment-pill">
+                  <span class="payment-icon">⚠</span>
+                  <span class="payment-text">${attendee.paymentStatus === 'confirmed' ? 'PAYMENT CONFIRMED' : 'PAYMENT PENDING'}</span>
                 </div>
-                <div class="qr-section">
-                  ${qrDataUrl ? '<img src="' + qrDataUrl + '" style="width: 120px; height: 120px; display: block;" />' : ''}
-                </div>
-                <div class="info-section">
-                  <p style="margin: 2px 0;">STATUS: ${attendee.paymentStatus.toUpperCase()}</p>
+
+                <div class="name">${attendee.fullName}</div>
+                <div class="attendee-id">ID: ${attendee.qrCode}</div>
+                <div class="delegate-label">DELEGATE</div>
+
+                <div class="qr-box">
+                  ${qrDataUrl ? '<img src="' + qrDataUrl + '" alt="QR" />' : ''}
                 </div>
               </div>
             </div>
@@ -196,11 +222,24 @@ const Ticket = () => {
       win.document.open();
       win.document.write(html);
       win.document.close();
-      setTimeout(() => {
-        win.focus();
-        win.print();
-        setTimeout(() => win.close(), 800);
-      }, 300);
+
+      const tryPrint = () => {
+        try {
+          const images = Array.from(win.document.images);
+          const allLoaded = images.every((img) => img.complete);
+          if (!allLoaded) {
+            setTimeout(tryPrint, 80);
+            return;
+          }
+          win.focus();
+          win.print();
+          setTimeout(() => win.close(), 800);
+        } catch {
+          setTimeout(tryPrint, 120);
+        }
+      };
+
+      setTimeout(tryPrint, 120);
     }
   };
 
