@@ -114,8 +114,8 @@ export const DownloadTicket: React.FC<DownloadTicketProps> = ({
               left: 30px;
               right: 130px;
               top: 410px;
-              text-align: left;
-              color: #000000;
+              text-align: center;
+              color: #ffffff;
               font-weight: 900;
               text-transform: uppercase;
               letter-spacing: 0px;
@@ -131,8 +131,8 @@ export const DownloadTicket: React.FC<DownloadTicketProps> = ({
               left: 30px;
               right: 130px;
               top: 472px;
-              text-align: left;
-              color: #000000;
+              text-align: center;
+              color: #ffffff;
               font-size: 13px;
               font-weight: 700;
               text-transform: uppercase;
@@ -141,17 +141,6 @@ export const DownloadTicket: React.FC<DownloadTicketProps> = ({
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
-            }
-            .delegate-label {
-              position: absolute;
-              left: 30px;
-              bottom: 30px;
-              color: #c41e3a;
-              font-size: 40px;
-              font-weight: 900;
-              text-transform: uppercase;
-              letter-spacing: 1px;
-              text-shadow: none;
             }
             .qr-box {
               position: absolute;
@@ -187,7 +176,6 @@ export const DownloadTicket: React.FC<DownloadTicketProps> = ({
 
                 <div class="name">${attendee.fullName}</div>
                 <div class="attendee-id">ID: ${attendee.qrCode}</div>
-                <div class="delegate-label">DELEGATE</div>
 
                 <div class="qr-box">
                   ${qrDataUrl ? '<img src="' + qrDataUrl + '" alt="QR" />' : ""}
