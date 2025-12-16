@@ -135,30 +135,36 @@ const Ticket = () => {
             .name {
               position: absolute;
               left: 30px;
-              right: 110px;
-              /* Below the "20 December 2025" on the template - in white section */
-              top: 62%;
+              right: 130px;
+              /* Positioned cleanly on white section: top 410px */
+              top: 410px;
               text-align: left;
               color: #000000;
               font-weight: 900;
               text-transform: uppercase;
-              letter-spacing: .5px;
-              font-size: 32px;
-              line-height: 1.1;
+              letter-spacing: 0px;
+              font-size: 28px;
+              line-height: 1.2;
               text-shadow: none;
+              word-break: break-word;
+              overflow: visible;
+              white-space: normal;
             }
             .attendee-id {
               position: absolute;
               left: 30px;
-              right: 110px;
-              top: 72%;
+              right: 130px;
+              top: 472px;
               text-align: left;
               color: #000000;
-              font-size: 14px;
+              font-size: 13px;
               font-weight: 700;
               text-transform: uppercase;
               letter-spacing: 0.5px;
               text-shadow: none;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
             .delegate-label {
               position: absolute;
@@ -173,18 +179,19 @@ const Ticket = () => {
             }
             .qr-box {
               position: absolute;
-              /* Inside the right-side QR box near "DELEGATE" */
-              right: 22px;
-              bottom: 22px;
-              width: 115px;
-              height: 115px;
+              /* Inside the right-side QR box on white section */
+              right: 25px;
+              bottom: 28px;
+              width: 112px;
+              height: 112px;
               background: #ffffff;
               border: 2px solid #333;
-              border-radius: 4px;
+              border-radius: 2px;
               display: flex;
               align-items: center;
               justify-content: center;
-              padding: 6px;
+              padding: 5px;
+              box-sizing: border-box;
             }
             .qr-box img {
               width: 100%;
