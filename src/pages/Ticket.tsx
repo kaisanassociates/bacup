@@ -28,7 +28,7 @@ const Ticket = () => {
       designation: parsedAttendee.designation?.toUpperCase() || "",
       qrCode: parsedAttendee.qrCode?.toUpperCase() || "",
       registrationDate: parsedAttendee.registrationDate || new Date().toISOString(),
-  paymentStatus: (parsedAttendee.paymentStatus ?? "pending"),
+      paymentStatus: (parsedAttendee.paymentStatus ?? "pending"),
       attended: parsedAttendee.attended || false,
       checkInTime: parsedAttendee.checkInTime || null,
       dateOfBirth: parsedAttendee.dateOfBirth || "N/A", // Default value added
@@ -105,7 +105,6 @@ const Ticket = () => {
             }
             .name-section {
               position: absolute;
-              top: 38%;
               top: 58%;
               width: 100%;
               text-align: center;
@@ -116,7 +115,6 @@ const Ticket = () => {
               align-items: center;
             }
             .pending-pill {
-              margin-top: 8px;
               position: absolute;
               top: 20px;
               left: 50%;
@@ -141,9 +139,6 @@ const Ticket = () => {
             }
             .qr-section {
               position: absolute;
-              bottom: 18%;
-              left: 50%;
-              transform: translateX(-50%);
               bottom: 12%;
               right: 8%;
               background: white;
@@ -168,10 +163,6 @@ const Ticket = () => {
             <div class="ticket">
               <img src="${templateSrc}" class="ticket-bg" />
               <div class="ticket-content">
-                <div class="name-section">
-                  <h1 style="margin:0; font-size: 26px; text-transform: uppercase; font-weight: 800;">${attendee.fullName}</h1>
-                  <p style="margin:4px 0 0; font-size: 16px; opacity: 0.9; font-weight: 600;">${attendee.designation || 'DELEGATE'}</p>
-                  ${attendee.paymentStatus !== 'confirmed' ? `
                 ${attendee.paymentStatus !== 'confirmed' ? `
                     <div class="pending-pill">
                       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fee2e2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -191,14 +182,14 @@ const Ticket = () => {
                   ${qrDataUrl ? '<img src="' + qrDataUrl + '" style="width: 120px; height: 120px; display: block;" />' : ''}
                 </div>
                 <div class="info-section">
-                  <p style="margin: 2px 0;">ID: ${attendee.qrCode}</p>
                   <p style="margin: 2px 0;">STATUS: ${attendee.paymentStatus.toUpperCase()}</p>
                 </div>
               </div>
             </div>
           </div>
         </body>
-      </html>`;
+      </html>
+    `;
 
     const win = window.open('', '_blank', 'width=900,height=1000');
     if (win) {
@@ -378,8 +369,6 @@ const Ticket = () => {
                     alt="Ticket Template" 
                     className="absolute inset-0 w-full h-full object-cover" 
                   />
-                  <div className="relative z-10 h-full flex flex-col items-center">
-                    <div className="mt-[38%] text-center w-full px-6 flex flex-col items-center">
                   <div className="relative z-10 h-full w-full">
                     {attendee.paymentStatus !== 'confirmed' && (
                       <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-600/30 backdrop-blur-md border border-red-200/30 shadow-lg z-20">
@@ -390,19 +379,11 @@ const Ticket = () => {
 
                     <div className="absolute top-[58%] w-full px-6 text-center">
                       <h2 className="text-2xl sm:text-3xl font-black text-white uppercase drop-shadow-lg leading-tight">{attendee.fullName}</h2>
-                      <p className="text-sm sm:text-base text-white/90 font-bold uppercase tracking-wider mt-2 drop-shadow-md">{attendee.designation || 'DELEGATE'}</p>
                       
-                      {attendee.paymentStatus !== 'confirmed' && (
-                        <div className="mt-3 flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-600/30 backdrop-blur-md border border-red-200/30 shadow-lg">
-                          <AlertTriangle className="w-3.5 h-3.5 text-red-50" strokeWidth={3} />
-                          <span className="text-[10px] sm:text-[11px] font-bold text-red-50 uppercase tracking-widest">Payment Pending</span>
-                        </div>
-                      )}
                       <p className="text-xs sm:text-sm text-white/90 font-bold uppercase tracking-wider mt-1 drop-shadow-md">ID: {attendee.qrCode}</p>
                       <p className="text-sm sm:text-base text-white/90 font-bold uppercase tracking-wider mt-1 drop-shadow-md">{attendee.designation || 'DELEGATE'}</p>
                     </div>
 
-                    <div className="mt-auto mb-[18%] bg-white p-2 rounded-xl shadow-xl">
                     <div className="absolute bottom-[12%] right-[8%] bg-white p-2 rounded-xl shadow-xl">
                       <QRCodeSVG
                         id="qr-svg"
@@ -415,7 +396,6 @@ const Ticket = () => {
                     
                     <div className="absolute bottom-4 w-full text-center text-white/70 text-[10px] font-mono uppercase tracking-widest">
                       <p>ID: {attendee.qrCode}</p>
-                      <p className="mt-0.5">STATUS: {attendee.paymentStatus}</p>
                       <p>STATUS: {attendee.paymentStatus}</p>
                     </div>
                   </div>
