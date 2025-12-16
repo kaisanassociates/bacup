@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
-import { ArrowLeft, Calendar, MapPin, Mail, Phone, User, Building, CheckCircle, Clock, DollarSign, ShieldCheck, Zap, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Calendar, MapPin, Mail, Phone, User, Building, CheckCircle, Clock, DollarSign, ShieldCheck, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Attendee } from "@/lib/api";
 import kaisanLogo from "@/assets/kaisan-logo.png";
@@ -204,35 +204,23 @@ const Ticket = () => {
                     alt="Ticket Template" 
                     className="absolute inset-0 w-full h-full object-cover" 
                   />
-                  <div className="relative z-10 h-full w-full">
-                    {attendee.paymentStatus !== 'confirmed' && (
-                      <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-600/30 backdrop-blur-md border border-red-200/30 shadow-lg z-20">
-                        <AlertTriangle className="w-3.5 h-3.5 text-red-50" strokeWidth={3} />
-                        <span className="text-[10px] sm:text-[11px] font-bold text-red-50 uppercase tracking-widest">Payment Pending</span>
-                      </div>
-                    )}
-
-                    <div className="absolute top-[58%] w-full px-6 text-center">
-                      <h2 className="text-2xl sm:text-3xl font-black text-white uppercase drop-shadow-lg leading-tight">{attendee.fullName}</h2>
-                      
-                      <p className="text-xs sm:text-sm text-white/90 font-bold uppercase tracking-wider mt-1 drop-shadow-md">ID: {attendee.qrCode}</p>
-                      <p className="text-sm sm:text-base text-white/90 font-bold uppercase tracking-wider mt-1 drop-shadow-md">{attendee.designation || 'DELEGATE'}</p>
-                    </div>
-
-                    <div className="absolute bottom-[12%] right-[8%] bg-white p-2 rounded-xl shadow-xl">
+                  <div className="relative w-full max-w-[280px] sm:max-w-[320px] mx-auto mt-12">
+                    <div className="absolute inset-0 bg-primary/10 blur-2xl rounded-full"></div>
+                    <div className="relative bg-white p-4 sm:p-6 rounded-2xl shadow-2xl border-4 border-primary/20">
                       <QRCodeSVG
                         id="qr-svg"
                         value={attendee.qrCode}
-                        size={120}
                         level="H"
-                        className="w-28 h-28 sm:w-32 sm:h-32"
+                        className="w-full h-auto"
                       />
                     </div>
-                    
-                    <div className="absolute bottom-4 w-full text-center text-white/70 text-[10px] font-mono uppercase tracking-widest">
-                      <p>ID: {attendee.qrCode}</p>
-                      <p>STATUS: {attendee.paymentStatus}</p>
-                    </div>
+                  </div>
+                  <div className="mt-6 text-center space-y-2">
+                    <p className="text-sm font-semibold text-foreground uppercase">SCAN FOR ENTRY</p>
+                    <p className="text-xs text-muted-foreground max-w-xs uppercase">
+                      PRESENT THIS QR CODE AT THE VENUE ENTRANCE FOR INSTANT VERIFICATION
+                    </p>
+                    <div className="inline-block px-3 py-1 bg-muted rounded text-xs font-mono text-muted-foreground mt-2 uppercase">{attendee.qrCode}</div>
                   </div>
                 </div>
                 <div className="mt-6 text-center space-y-2">
