@@ -129,7 +129,7 @@ const Ticket = () => {
                 </div>
               </div>
             )}
-            <div className="grid lg:grid-cols-[1.6fr,1fr] gap-8 md:gap-10">
+            <div className="grid lg:grid-cols-[1fr,auto] gap-8 md:gap-12 items-start">
               <div className="space-y-6 md:space-y-8">
                 <div className="space-y-2">
                   <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">ATTENDEE INFORMATION</p>
@@ -196,38 +196,24 @@ const Ticket = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col items-center justify-center row-start-1 lg:row-auto">
-                <div className="relative w-full max-w-[350px] aspect-[2/3] rounded-3xl overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-transform duration-300">
-                  <img 
-                    id="ticket-template-img" 
-                    src={tagTemplate} 
-                    alt="Ticket Template" 
-                    className="absolute inset-0 w-full h-full object-cover" 
-                  />
-                  <div className="relative w-full max-w-[280px] sm:max-w-[320px] mx-auto mt-12">
-                    <div className="absolute inset-0 bg-primary/10 blur-2xl rounded-full"></div>
-                    <div className="relative bg-white p-4 sm:p-6 rounded-2xl shadow-2xl border-4 border-primary/20">
-                      <QRCodeSVG
-                        id="qr-svg"
-                        value={attendee.qrCode}
-                        level="H"
-                        className="w-full h-auto"
-                      />
-                    </div>
-                  </div>
-                  <div className="mt-6 text-center space-y-2">
-                    <p className="text-sm font-semibold text-foreground uppercase">SCAN FOR ENTRY</p>
-                    <p className="text-xs text-muted-foreground max-w-xs uppercase">
-                      PRESENT THIS QR CODE AT THE VENUE ENTRANCE FOR INSTANT VERIFICATION
-                    </p>
-                    <div className="inline-block px-3 py-1 bg-muted rounded text-xs font-mono text-muted-foreground mt-2 uppercase">{attendee.qrCode}</div>
+              <div className="flex flex-col items-center gap-6 lg:sticky lg:top-8">
+                <div className="relative w-full max-w-[280px] sm:max-w-[320px]">
+                  <div className="absolute inset-0 bg-primary/10 blur-2xl rounded-full"></div>
+                  <div className="relative bg-white p-4 sm:p-6 rounded-2xl shadow-2xl border-4 border-primary/20">
+                    <QRCodeSVG
+                      id="qr-svg"
+                      value={attendee.qrCode}
+                      level="H"
+                      className="w-full h-auto"
+                    />
                   </div>
                 </div>
-                <div className="mt-6 text-center space-y-2">
+                <div className="text-center space-y-2">
                   <p className="text-sm font-semibold text-foreground uppercase">SCAN FOR ENTRY</p>
                   <p className="text-xs text-muted-foreground max-w-xs uppercase">
                     PRESENT THIS QR CODE AT THE VENUE ENTRANCE FOR INSTANT VERIFICATION
                   </p>
+                  <div className="inline-block px-3 py-1 bg-muted rounded text-xs font-mono text-muted-foreground mt-2 uppercase">{attendee.qrCode}</div>
                 </div>
               </div>
             </div>
