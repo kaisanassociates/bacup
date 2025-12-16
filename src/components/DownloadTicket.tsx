@@ -113,40 +113,44 @@ export const DownloadTicket: React.FC<DownloadTicketProps> = ({
             .name {
               position: absolute;
               left: 30px;
-              right: 130px;
-              top: 410px;
+              right: 30px;
+              top: 405px;
               text-align: center;
               color: #ffffff;
               font-weight: 900;
               text-transform: uppercase;
-              letter-spacing: 0px;
-              font-size: 28px;
-              line-height: 1.2;
+              letter-spacing: -0.5px;
+              font-size: 20px;
+              line-height: 1.3;
               text-shadow: none;
               word-break: break-word;
-              overflow: visible;
+              overflow: hidden;
               white-space: normal;
+              max-height: 60px;
             }
             .attendee-id {
               position: absolute;
               left: 30px;
-              right: 130px;
-              top: 460px;
+              right: 30px;
+              top: 428px;
               text-align: center;
               color: #ffffff;
-              font-size: 13px;
-              font-weight: 700;
+              font-size: 11px;
+              font-weight: 600;
               text-transform: uppercase;
-              letter-spacing: 0.5px;
+              letter-spacing: 0.3px;
               text-shadow: none;
-              white-space: nowrap;
+              white-space: normal;
+              word-break: break-all;
               overflow: hidden;
               text-overflow: ellipsis;
+              max-height: 32px;
+              line-height: 1.3;
             }
             .qr-box {
               position: absolute;
-              right: 20px;
-              bottom: 20px;
+              right: 0px;
+              bottom: 0px;0f0
               width: 110px;
               height: 110px;
               background: #ffffff;
