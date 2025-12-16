@@ -88,26 +88,27 @@ export const DownloadTicket: React.FC<DownloadTicketProps> = ({
               transform: translateX(-50%);
               display: inline-flex;
               align-items: center;
-              gap: 8px;
-              padding: 10px 20px;
+              gap: 6px;
+              padding: 8px 16px;
               border-radius: 999px;
-              background: #ffffff;
-              border: none;
-              box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+              background: rgba(255, 255, 255, 0.15);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255, 255, 255, 0.2);
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
               z-index: 10;
             }
             .payment-icon {
               width: 16px;
               height: 16px;
-              color: #c41e3a;
+              color: #ffffff;
               font-weight: bold;
             }
             .payment-text {
-              color: #c41e3a;
-              font-size: 11px;
+              color: #ffffff;
+              font-size: 10px;
               font-weight: 900;
               text-transform: uppercase;
-              letter-spacing: 1.5px;
+              letter-spacing: 1.2px;
             }
             .name {
               position: absolute;
@@ -130,7 +131,7 @@ export const DownloadTicket: React.FC<DownloadTicketProps> = ({
               position: absolute;
               left: 30px;
               right: 130px;
-              top: 472px;
+              top: 460px;
               text-align: center;
               color: #ffffff;
               font-size: 13px;
@@ -144,17 +145,17 @@ export const DownloadTicket: React.FC<DownloadTicketProps> = ({
             }
             .qr-box {
               position: absolute;
-              right: 25px;
-              bottom: 28px;
-              width: 112px;
-              height: 112px;
+              right: 20px;
+              bottom: 20px;
+              width: 110px;
+              height: 110px;
               background: #ffffff;
-              border: 2px solid #333;
-              border-radius: 2px;
+              border: none;
+              border-radius: 0px;
               display: flex;
               align-items: center;
               justify-content: center;
-              padding: 5px;
+              padding: 4px;
               box-sizing: border-box;
             }
             .qr-box img {
