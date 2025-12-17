@@ -205,31 +205,32 @@ const Admin = () => {
     }
   };
 
-  const handleConfirmPayment = async (id: string) => {
+  const handleTogglePaymentStatus = async (id: string, currentStatus: string) => {
     try {
+      const newStatus = currentStatus === 'confirmed' ? 'pending' : 'confirmed';
       const response = await fetch(`/api/attendees/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${adminKey}`
         },
-        body: JSON.stringify({ paymentStatus: 'confirmed' })
+        body: JSON.stringify({ paymentStatus: newStatus })
       });
       
       const result = await response.json();
       
       if (result.success) {
         const updated = attendees.map((a) => 
-          a._id === id ? { ...a, paymentStatus: 'confirmed' } : a
+          a._id === id ? { ...a, paymentStatus: newStatus } : a
         );
         setAttendees(updated);
         setFilteredAttendees(updated);
-        toast.success('Payment confirmed successfully');
+        toast.success(`Payment marked as ${newStatus}`);
       } else {
-        throw new Error(result.error || 'Failed to confirm payment');
+        throw new Error(result.error || 'Failed to update payment status');
       }
     } catch (error) {
-      toast.error("Failed to confirm payment");
+      toast.error("Failed to update payment status");
     }
   };
 
@@ -474,7 +475,7 @@ const Admin = () => {
         </div>
 
         <div className="mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <div className="glass-panel p-6">
               <h3 className="text-sm text-muted-foreground mb-2">Total Registrations</h3>
               <p className="text-3xl font-bold">{attendees.length}</p>
@@ -486,14 +487,26 @@ const Admin = () => {
               </p>
             </div>
             <div className="glass-panel p-6">
-              <h3 className="text-sm text-muted-foreground mb-2">Pending</h3>
+              <h3 className="text-sm text-muted-foreground mb-2">Pending Check-in</h3>
               <p className="text-3xl font-bold text-yellow-500">
                 {attendees.filter((a) => !a.attended).length}
               </p>
             </div>
-            <div className="glass-panel p-6 md:col-span-3">
+            <div className="glass-panel p-6">
               <h3 className="text-sm text-muted-foreground mb-2">Volunteers</h3>
               <p className="text-3xl font-bold">{volunteers.length}</p>
+            </div>
+            <div className="glass-panel p-6">
+              <h3 className="text-sm text-muted-foreground mb-2">Payments Confirmed</h3>
+              <p className="text-3xl font-bold text-green-500">
+                {attendees.filter((a) => a.paymentStatus === 'confirmed').length}
+              </p>
+            </div>
+            <div className="glass-panel p-6">
+              <h3 className="text-sm text-muted-foreground mb-2">Payments Pending</h3>
+              <p className="text-3xl font-bold text-yellow-500">
+                {attendees.filter((a) => a.paymentStatus !== 'confirmed').length}
+              </p>
             </div>
           </div>
 
@@ -615,17 +628,19 @@ const Admin = () => {
                         >
                           <Eye className="w-4 h-4" />
                         </Button>
-                        {attendee.paymentStatus !== 'confirmed' && (
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => handleConfirmPayment(attendee._id)}
-                            className="h-9 w-9 rounded-full"
-                            title="Confirm Payment"
-                          >
-                            <DollarSign className="w-4 h-4" />
-                          </Button>
-                        )}
+                        <Button
+                          variant={attendee.paymentStatus === 'confirmed' ? 'default' : 'outline'}
+                          size="icon"
+                          onClick={() => handleTogglePaymentStatus(attendee._id, attendee.paymentStatus)}
+                          className={`h-9 w-9 rounded-full ${
+                            attendee.paymentStatus === 'confirmed' 
+                              ? 'bg-green-500 hover:bg-green-600 text-white' 
+                              : ''
+                          }`}
+                          title={attendee.paymentStatus === 'confirmed' ? 'Mark as Pending' : 'Mark as Confirmed'}
+                        >
+                          <DollarSign className="w-4 h-4" />
+                        </Button>
                         <Button
                           variant="outline"
                           size="icon"
