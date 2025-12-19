@@ -16,20 +16,19 @@ const Staff = () => {
   const [lastScanned, setLastScanned] = useState<any>(null);
   const [scanMode, setScanMode] = useState<'camera' | 'manual'>('manual');
   const [isCameraActive, setIsCameraActive] = useState(false);
+  const [cameraError, setCameraError] = useState<string>("");
   const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
 
   useEffect(() => {
     return () => {
       // Cleanup camera on unmount - safely stop scanner
       if (html5QrCodeRef.current) {
-        const scanner = html5QrCodeRef.current;
-        // Check if scanner is actually running before stopping
-        if (scanner.getState && scanner.getState() === 2) { // State 2 = SCANNING
-          scanner.stop()
-            .catch((err) => {
-              // Silently handle errors during cleanup
-              console.log('Scanner cleanup (safe to ignore):', err);
-            });
+        try {
+          html5QrCodeRef.current.stop().catch(() => {
+            // Silently ignore errors
+          });
+        } catch (err) {
+          console.log('Scanner cleanup:', err);
         }
       }
     };
@@ -53,56 +52,80 @@ const Staff = () => {
 
   const startCamera = async () => {
     try {
+      setCameraError("");
       // Set scan mode first to render the div
       setScanMode('camera');
       
       // Wait for DOM to update
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 150));
       
+      // Check if qr-reader element exists
+      const readerElement = document.getElementById("qr-reader");
+      if (!readerElement) {
+        throw new Error("Camera container not found in DOM");
+      }
+
+      // Create new instance
       const html5QrCode = new Html5Qrcode("qr-reader");
       html5QrCodeRef.current = html5QrCode;
       
+      // Request camera with HTTPS requirement
+      const constraints = {
+        facingMode: "environment",
+        width: { ideal: 1280 },
+        height: { ideal: 720 }
+      };
+      
       await html5QrCode.start(
-        { facingMode: "environment" },
+        constraints,
         {
           fps: 10,
-          qrbox: { width: 250, height: 250 }
+          qrbox: { width: 250, height: 250 },
+          disableFlip: false,
+          aspectRatio: 1.0
         },
         (decodedText) => {
           setQrCode(decodedText);
-          // Remove stopCamera() call here - keep camera active
           handleScan(decodedText);
         },
-        () => {
-          // ignore errors during scanning
+        (errorMessage) => {
+          // Log but don't show error for every frame
+          console.debug('QR scan error:', errorMessage);
         }
       );
       
       setIsCameraActive(true);
       toast.success("Camera started");
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error starting camera:", err);
-      toast.error("Failed to start camera. Please check permissions.");
+      let errorMsg = "Failed to start camera";
+      
+      if (err.message?.includes("NotAllowedError")) {
+        errorMsg = "Camera permission denied. Please enable camera access in browser settings.";
+      } else if (err.message?.includes("NotFoundError")) {
+        errorMsg = "No camera found on this device.";
+      } else if (err.message?.includes("NotReadableError")) {
+        errorMsg = "Camera is already in use by another app.";
+      } else if (err.message?.includes("SecurityError")) {
+        errorMsg = "HTTPS is required for camera access.";
+      }
+      
+      setCameraError(errorMsg);
+      toast.error(errorMsg);
       setScanMode('manual');
+      setIsCameraActive(false);
     }
   };
 
   const stopCamera = async () => {
     if (html5QrCodeRef.current) {
       try {
-        const scanner = html5QrCodeRef.current;
-        // Only stop if scanner is in scanning state
-        if (scanner.getState && scanner.getState() === 2) {
-          await scanner.stop();
-          setIsCameraActive(false);
-          toast.info("Camera stopped");
-        } else {
-          // Scanner not running, just update state
-          setIsCameraActive(false);
-        }
+        await html5QrCodeRef.current.stop();
+        html5QrCodeRef.current = null;
+        setIsCameraActive(false);
+        toast.info("Camera stopped");
       } catch (err) {
         console.error("Error stopping camera:", err);
-        // Force state update even on error
         setIsCameraActive(false);
       }
     } else {
@@ -177,7 +200,6 @@ const Staff = () => {
         setLastScanned(attendee);
         setQrCode("");
         setIsScanning(false);
-        // Don't stop camera - keep scanning for next attendee
         return;
       }
       
@@ -206,7 +228,6 @@ const Staff = () => {
       setLastScanned(updateResult.data);
       setQrCode("");
       toast.success(`✓ ${updateResult.data.name || updateResult.data.fullName} checked in successfully!`);
-      // Keep camera running for next scan - don't call stopCamera()
     } catch (error: any) {
       console.error('Scan error:', error);
       toast.error(error.message || "Error scanning QR code");
@@ -289,10 +310,16 @@ const Staff = () => {
 
             {/* Camera View */}
             {scanMode === 'camera' && (
-              <div className="mb-6">
+              <div className="mb-6 w-full">
+                {cameraError && (
+                  <div className="mb-4 p-4 bg-destructive/10 border border-destructive/30 rounded-lg">
+                    <p className="text-sm text-destructive">{cameraError}</p>
+                  </div>
+                )}
                 <div 
                   id="qr-reader" 
                   className="w-full rounded-lg overflow-hidden border-2 border-primary/20"
+                  style={{ minHeight: '300px' }}
                 />
               </div>
             )}
