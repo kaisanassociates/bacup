@@ -53,31 +53,21 @@ const Staff = () => {
   const startCamera = async () => {
     try {
       setCameraError("");
-      // Set scan mode first to render the div
       setScanMode('camera');
       
-      // Wait for DOM to update
       await new Promise(resolve => setTimeout(resolve, 150));
       
-      // Check if qr-reader element exists
       const readerElement = document.getElementById("qr-reader");
       if (!readerElement) {
         throw new Error("Camera container not found in DOM");
       }
 
-      // Create new instance
       const html5QrCode = new Html5Qrcode("qr-reader");
       html5QrCodeRef.current = html5QrCode;
       
-      // Request camera with HTTPS requirement
-      const constraints = {
-        facingMode: "environment",
-        width: { ideal: 1280 },
-        height: { ideal: 720 }
-      };
-      
+      // Use ONLY facingMode - html5-qrcode doesn't support width/height in start()
       await html5QrCode.start(
-        constraints,
+        { facingMode: "environment" },
         {
           fps: 10,
           qrbox: { width: 250, height: 250 },
@@ -89,7 +79,6 @@ const Staff = () => {
           handleScan(decodedText);
         },
         (errorMessage) => {
-          // Log but don't show error for every frame
           console.debug('QR scan error:', errorMessage);
         }
       );
