@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Html5Qrcode } from "html5-qrcode";
+import { IndianRupeeIcon } from "@/components/IndianRupeeIcon";
 import kaisanLogo from "@/assets/kaisan-logo.png";
 
 const Staff = () => {
@@ -69,7 +70,7 @@ const Staff = () => {
         },
         (decodedText) => {
           setQrCode(decodedText);
-          stopCamera();
+          // Remove stopCamera() call here - keep camera active
           handleScan(decodedText);
         },
         () => {
@@ -176,6 +177,7 @@ const Staff = () => {
         setLastScanned(attendee);
         setQrCode("");
         setIsScanning(false);
+        // Don't stop camera - keep scanning for next attendee
         return;
       }
       
@@ -204,6 +206,7 @@ const Staff = () => {
       setLastScanned(updateResult.data);
       setQrCode("");
       toast.success(`✓ ${updateResult.data.name || updateResult.data.fullName} checked in successfully!`);
+      // Keep camera running for next scan - don't call stopCamera()
     } catch (error: any) {
       console.error('Scan error:', error);
       toast.error(error.message || "Error scanning QR code");

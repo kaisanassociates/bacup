@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Search, Trash2, CheckCircle, XCircle, DollarSign, Eye, Edit, FileDown, Ticket } from "lucide-react";
+import { ArrowLeft, Search, Trash2, CheckCircle, XCircle, Eye, Edit, FileDown, Ticket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { IndianRupeeIcon } from "@/components/IndianRupeeIcon";
 import {
   Dialog,
   DialogContent,
@@ -594,12 +595,12 @@ const Admin = () => {
                     <td className="px-4 py-4">
                       {attendee.paymentStatus === 'confirmed' ? (
                         <span className="inline-flex items-center gap-1 text-green-500 text-sm">
-                          <DollarSign className="w-4 h-4" />
+                          <IndianRupeeIcon className="w-4 h-4" />
                           Confirmed
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 text-yellow-500 text-sm">
-                          <DollarSign className="w-4 h-4" />
+                          <IndianRupeeIcon className="w-4 h-4" />
                           Pending
                         </span>
                       )}
@@ -639,7 +640,7 @@ const Admin = () => {
                           }`}
                           title={attendee.paymentStatus === 'confirmed' ? 'Mark as Pending' : 'Mark as Confirmed'}
                         >
-                          <DollarSign className="w-4 h-4" />
+                          <IndianRupeeIcon className="w-4 h-4" />
                         </Button>
                         <Button
                           variant="outline"
@@ -693,7 +694,7 @@ const Admin = () => {
                     <td className="px-4 py-4 text-sm text-muted-foreground">{v.organization || '—'}</td>
                     <td className="px-4 py-4 text-sm text-muted-foreground">{v.whatsappNumber || '—'}</td>
                     <td className="px-4 py-4 text-sm">{v.availability}{v.availability==='Part-time' && v.availabilityTime? ` (${v.availabilityTime})`:''}</td>
-                    <td className="px-4 py-4 text-sm max-w-xs truncate" title={v.preferredAreas?.join(', ')}>{Array.isArray(v.preferredAreas)? v.preferredAreas.join(', '): '—'}</td>
+                    <td className="px-4 py-4 text-sm max-w-xs truncate" title={v.preferredAreas?.join(', ')}>{Array.isArray(v.preferredAreas)? v.preferredAreas.join(','): '—'}</td>
                     <td className="px-4 py-3">
                       <div className="flex gap-2">
                         <Button

@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
-import { ArrowLeft, Calendar, MapPin, Mail, Phone, User, Building, CheckCircle, Clock, DollarSign, ShieldCheck, Zap } from "lucide-react";
+import { ArrowLeft, Calendar, MapPin, Mail, Phone, User, Building, CheckCircle, Clock, ShieldCheck, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Attendee } from "@/lib/api";
 import kaisanLogo from "@/assets/kaisan-logo.png";
 import tagTemplate from "@/assets/TAG_Template.jpg";
 import DownloadTicket from "@/components/DownloadTicket";
 import { toast } from "sonner";
+import { IndianRupeeIcon } from "@/components/IndianRupeeIcon";
 
 const Ticket = () => {
   const [attendee, setAttendee] = useState<Attendee | null>(null);
@@ -102,7 +103,7 @@ const Ticket = () => {
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="flex items-start gap-3">
                     <div className="mt-0.5 rounded-full bg-yellow-200 p-2 text-yellow-700">
-                      <DollarSign className="w-4 h-4" />
+                      <IndianRupeeIcon className="w-4 h-4" />
                     </div>
                     <div>
                       <h3 className="text-sm font-semibold uppercase text-yellow-800">Payment Pending — Complete to Confirm Your Seat</h3>
@@ -119,7 +120,7 @@ const Ticket = () => {
                   <div className="flex-shrink-0 mt-4 md:mt-0">
                     <div className="flex flex-col sm:flex-row items-center gap-3">
                       <Button onClick={() => window.location.href = 'upi://pay?ver=01&mode=01&pa=c0j9uodoggyh@idbi&pn=KAISAN%20ASSOCIATES%20LLP&mc=5816&qrMedium=06&am=3999&cu=INR'} className="w-full sm:w-auto h-11 px-6 font-semibold uppercase bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white rounded-full text-sm">
-                        <DollarSign className="w-4 h-4 mr-2" /> Pay Now
+                        <IndianRupeeIcon className="w-4 h-4 mr-2" /> Pay Now
                       </Button>
                       <Button onClick={handleNeedHelp} variant="outline" className="w-full sm:w-auto h-11 px-4 rounded-full uppercase text-sm">
                         Need Help
